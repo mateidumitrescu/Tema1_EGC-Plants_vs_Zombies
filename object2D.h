@@ -10,5 +10,34 @@ namespace object2D
 {
 
     // Create square with given bottom left corner, length and color
-    Mesh* CreateSquare(const std::string &name, glm::vec3 leftBottomCorner, float length, glm::vec3 color, bool fill = false);
+    Mesh* CreateSquare(
+    const std::string &name,
+    glm::vec3 leftBottomCorner,
+    float length, glm::vec3 color,
+    bool fill = false);
+
+    // Create rectangle with given bottom left corner, width, height, and color
+    Mesh* CreateRectangle(
+    const std::string &name,
+    glm::vec3 leftBottomCorner,
+    float width,
+    float height,
+    glm::vec3 color,
+    bool fill);
+
+    // Create rhombus
+    Mesh* CreateRhombus(
+    const std::string &name,
+    glm::vec3 leftBottomCorner,
+    float length,
+    glm::vec3 color,
+    bool fill);
+
+    // Create heart
+    Mesh* CreateHeart(
+    const std::string &name,
+    glm::vec3 leftBottomCorner,
+    float length,
+    glm::vec3 color,
+    bool fill);
 }
