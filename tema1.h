@@ -17,6 +17,10 @@ namespace m1
      private:
         void FrameStart() override;
         void Update(float deltaTimeSeconds) override;
+
+        void OnMouseMove(int mouseX, int mouseY, int deltaX, int deltaY) override;
+        void OnMouseBtnPress(int mouseX, int mouseY, int button, int mods) override;
+        void OnMouseBtnRelease(int mouseX, int mouseY, int button, int mods) override;
         
     
      // useful variables
@@ -26,8 +30,12 @@ namespace m1
         float rhombus_center_x, rhombus_center_y;
         float heart_center_x, heart_center_y;
         float star_center_x, star_center_y;
+        float hexagon_center_x, hexagon_center_y;
         glm::mat3 modelMatrix;
         int life_number;
+        int moneyStars;
+
+        float dragRhombus_x, dragRhombus_y;
 
         
     };

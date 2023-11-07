@@ -25,7 +25,7 @@ namespace object2D
     glm::vec3 color,
     bool fill);
 
-    // Create rhombus
+    // Create rhombus (Plant)
     Mesh* CreateRhombus(
     const std::string &name,
     glm::vec3 leftBottomCorner,
@@ -47,5 +47,14 @@ namespace object2D
     glm::vec3 leftBottomCorner,
     float length,
     glm::vec3 color,
+    bool fill);
+
+    // Create hexagon (enemy)
+    Mesh* CreateHexagon(
+    const std::string &name,
+    glm::vec3 leftBottomCorner,
+    float length,
+    glm::vec3 colorBigHex,
+    glm::vec3 colorSmallHex,
     bool fill);
 }

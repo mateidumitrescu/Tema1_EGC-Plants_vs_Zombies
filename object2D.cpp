@@ -188,5 +188,48 @@ Mesh* object2D::CreateStar(
     return star;
 }
 
+Mesh* object2D::CreateHexagon(
+    const std::string &name,
+    glm::vec3 leftBottomCorner,
+    float length,
+    glm::vec3 colorBigHex,
+    glm::vec3 colorSmallHex,
+    bool fill)
+{
+    glm::vec3 corner = leftBottomCorner;
+
+    std::vector<VertexFormat> vertices =
+    {
+        VertexFormat(corner + glm::vec3(length / 3.5, length / 10 * 0.5, 1), colorBigHex),
+        VertexFormat(corner + glm::vec3(length / 10 * 0.5, length / 2, 1), colorBigHex),
+        VertexFormat(corner + glm::vec3(length / 3.5, length / 10 * 9.5, 1), colorBigHex),
+        VertexFormat(corner + glm::vec3(length / 3.5 * 2.5, length / 10 * 9.5, 1), colorBigHex),
+        VertexFormat(corner + glm::vec3(length / 10 * 9.5, length / 2, 1), colorBigHex),
+        VertexFormat(corner + glm::vec3(length / 3.5 * 2.5, length / 10 * 0.5, 1), colorBigHex),
+        
+        VertexFormat(corner + glm::vec3(length / 10 * 6.2, length / 10 * 2, 2), colorSmallHex),
+        VertexFormat(corner + glm::vec3(length / 10 * 3.7, length / 10 * 2, 2), colorSmallHex),
+        VertexFormat(corner + glm::vec3(length / 10 * 2, length / 2, 2), colorSmallHex),
+        VertexFormat(corner + glm::vec3(length / 10 * 3.7, length / 10 * 8, 2), colorSmallHex),
+        VertexFormat(corner + glm::vec3(length / 10 * 6.2, length / 10 * 8, 2), colorSmallHex),
+        VertexFormat(corner + glm::vec3(length / 10 * 8, length / 2, 2), colorSmallHex),        
+    };
+
+    Mesh* hexagon = new Mesh(name);
+    std::vector<unsigned int> indices = { 0, 1, 2, 3, 4, 5, 6, 7, 0, 8, 9, 10, 11};
+
+    if (!fill) {
+        hexagon->SetDrawMode(GL_LINE_LOOP);
+    } else {
+        // Drawing triangles between indices
+        hexagon->SetDrawMode(GL_TRIANGLES);
+
+        // Defining the triangles
+        indices = {5, 0, 1, 5, 1, 2, 5, 2, 3, 5, 3, 4, 6, 7, 8, 6, 8, 9, 6, 9, 10, 6, 10, 11};
+    }
+
+    hexagon->InitFromData(vertices, indices);
+    return hexagon;
+}
 
 

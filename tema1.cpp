@@ -41,8 +41,12 @@ void Tema1::Init()
     // dimension of hearts
     float heartLength = 170;
 
-    // dimension of user space star
-    float userStarDimension = 200;
+    // dimension of user space star and "money star"
+    float userStarDimension = 45;
+    float userMoneyStarDimension = 55;
+
+    // dimension of enemy (hexagon)
+    float hexagonDimension = 200;
     
     // computing  center coordinates of square
     square_center_x = corner.x + squareSide / 2;
@@ -63,6 +67,10 @@ void Tema1::Init()
     // computing user space star coordinates of center
     star_center_x = corner.x + userStarDimension / 2;
     star_center_y = corner.y + userStarDimension / 2;
+
+    // computing hexagon center coordinates
+    hexagon_center_x = corner.x + hexagonDimension / 2;
+    hexagon_center_y = corner.y + hexagonDimension / 2;
 
     // setting number of lifes
     life_number = 3;
@@ -168,6 +176,31 @@ void Tema1::Init()
     
     AddMeshToList(userSpaceStar);
 
+    // creating mesh for user "money" to buy plants
+    Mesh* userMoneyStar =
+    object2D::CreateStar(
+        "userMoneyStar",
+        corner,
+        userMoneyStarDimension,
+        glm::vec3(1, 0.7f, 0),
+        true);
+    
+    AddMeshToList(userMoneyStar);
+
+    moneyStars = 5;
+
+    // creating mesh for enemy (hexagon)
+    Mesh* blueHexagon =
+    object2D::CreateHexagon(
+        "blueHexagon",
+        corner,
+        hexagonDimension,
+        glm::vec3(0, 0, 1),
+        glm::vec3(0, 1, 0),
+        true);
+    
+    AddMeshToList(blueHexagon);
+
 }
 
 void Tema1::FrameStart()
@@ -233,46 +266,33 @@ void Tema1::Update(float deltaTimeSeconds)
     modelMatrix = glm::mat3(1);
     modelMatrix *= transform2D::Translate(20, 50);
     RenderMesh2D(meshes["rectangle"], shaders["VertexColor"], modelMatrix);
-    
-    // orange Rhombus (1 star)
-    modelMatrix = glm::mat3(1);
-    modelMatrix *= transform2D::Translate(200, 1225);
-    RenderMesh2D(meshes["orangeRhombus"], shaders["VertexColor"], modelMatrix);
-    
-    // blue Rhombus (2 stars)
-    modelMatrix = glm::mat3(1);
-    modelMatrix *= transform2D::Translate(550, 1225);
-    RenderMesh2D(meshes["blueRhombus"], shaders["VertexColor"], modelMatrix);
 
-    // yellow Rhombus (3 stars)
-    modelMatrix = glm::mat3(1);
-    modelMatrix *= transform2D::Translate(900, 1225);
-    RenderMesh2D(meshes["yellowRhombus"], shaders["VertexColor"], modelMatrix);
-
-    // purple Rhombus (4 stars)
-    modelMatrix = glm::mat3(1);
-    modelMatrix *= transform2D::Translate(1250, 1225);
-    RenderMesh2D(meshes["purpleRhombus"], shaders["VertexColor"], modelMatrix);
+    std::vector<std::string> colorsRhombus = {"orangeRhombus",
+                                    "blueRhombus",
+                                    "yellowRhombus",
+                                    "purpleRhombus",};
+    
+    int step = 165;
+    for (auto color : colorsRhombus) {
+        modelMatrix = glm::mat3(1);
+        modelMatrix *= transform2D::Translate(step, 1225);
+        RenderMesh2D(meshes[color], shaders["VertexColor"], modelMatrix);
+        step += 350;
+    }
+    
 
     // interface for player (squares where plants will stay to be picked)
-    modelMatrix = glm::mat3(1);
-    modelMatrix *= transform2D::Translate(100, 1200);
-    RenderMesh2D(meshes["squareRhombus"], shaders["VertexColor"], modelMatrix);
-
-    modelMatrix = glm::mat3(1);
-    modelMatrix *= transform2D::Translate(450, 1200);
-    RenderMesh2D(meshes["squareRhombus"], shaders["VertexColor"], modelMatrix);
-    
-    modelMatrix = glm::mat3(1);
-    modelMatrix *= transform2D::Translate(800, 1200);
-    RenderMesh2D(meshes["squareRhombus"], shaders["VertexColor"], modelMatrix);
-
-    modelMatrix = glm::mat3(1);
-    modelMatrix *= transform2D::Translate(1150, 1200);
-    RenderMesh2D(meshes["squareRhombus"], shaders["VertexColor"], modelMatrix);
+    step = 0;
+    for (int i = 1; i <= 4; i++) {
+        int x = i * 100 + step;
+        modelMatrix = glm::mat3(1);
+        modelMatrix *= transform2D::Translate(x, 1200);
+        RenderMesh2D(meshes["squareRhombus"], shaders["VertexColor"], modelMatrix);
+        step += 250;
+    }
 
     // rendering the number of lives
-    int step = 225; // 100 (heart length) + 40 (extra space)
+    step = 225; // 100 (heart length) + 40 (extra space)
     for (int i = 0; i < life_number; i++) {
         modelMatrix = glm::mat3(1);
         int x = 1600 + i * step;
@@ -280,7 +300,50 @@ void Tema1::Update(float deltaTimeSeconds)
         RenderMesh2D(meshes["heart"], shaders["VertexColor"], modelMatrix);
     }
 
+    // rendering stars for user space to see the cost of each plant
+    step = 100;
+    int level = 1; // level of plant
+    for (int i = 0; i < 4; i++) {
+        int x = step;
+        for (int j = 0; j < level; j++) {
+            modelMatrix = glm::mat3(1);
+            modelMatrix *= transform2D::Translate(x, 1140);
+            RenderMesh2D(meshes["userSpaceStar"], shaders["VertexColor"], modelMatrix);
+            x += 51;
+        }
+        level++;
+        step += 350;
+    }
+
+    step = 1510;
+    // rendering "money stars"
+    for (int i = 0; i < moneyStars; i++) {
+        modelMatrix = glm::mat3(1);
+        modelMatrix *= transform2D::Translate(step, 1140);
+        RenderMesh2D(meshes["userMoneyStar"], shaders["VertexColor"], modelMatrix);
+        step += 80;
+    }
+
     modelMatrix = glm::mat3(1);
-    modelMatrix *= transform2D::Translate(950, 320);
-    RenderMesh2D(meshes["userSpaceStar"], shaders["VertexColor"], modelMatrix);
+    modelMatrix *= transform2D::Translate(1300 , 600);
+    modelMatrix *= transform2D::Translate(hexagon_center_x , hexagon_center_y);
+    modelMatrix *= transform2D::Rotate(0.3926991f);
+    modelMatrix *= transform2D::Translate(-hexagon_center_x, -hexagon_center_y);
+    RenderMesh2D(meshes["blueHexagon"], shaders["VertexColor"], modelMatrix);
+    
+}
+
+void Tema1::OnMouseMove(int mouseX, int mouseY, int deltaX, int deltaY)
+{
+
+}
+
+void Tema1::OnMouseBtnPress(int mouseX, int mouseY, int button, int mods)
+{
+    if ()
+}
+
+void Tema1::OnMouseBtnRelease(int mouseX, int mouseY, int button, int mods)
+{
+
 }
