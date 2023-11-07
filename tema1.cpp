@@ -40,6 +40,9 @@ void Tema1::Init()
 
     // dimension of hearts
     float heartLength = 170;
+
+    // dimension of user space star
+    float userStarDimension = 200;
     
     // computing  center coordinates of square
     square_center_x = corner.x + squareSide / 2;
@@ -56,6 +59,10 @@ void Tema1::Init()
     // computing heart coordinates of center
     heart_center_x = corner.x + heartLength / 2;
     heart_center_y = corner.y + heartLength / 2;
+
+    // computing user space star coordinates of center
+    star_center_x = corner.x + userStarDimension / 2;
+    star_center_y = corner.y + userStarDimension / 2;
 
     // setting number of lifes
     life_number = 3;
@@ -149,6 +156,17 @@ void Tema1::Init()
         true);
     
     AddMeshToList(purpleRhombus);
+
+    // creating mesh for user space stars
+    Mesh* userSpaceStar =
+    object2D::CreateStar(
+        "userSpaceStar",
+        corner,
+        userStarDimension,
+        glm::vec3(0.6f, 0.6f, 0.6f),
+        true);
+    
+    AddMeshToList(userSpaceStar);
 
 }
 
@@ -261,4 +279,8 @@ void Tema1::Update(float deltaTimeSeconds)
         modelMatrix *= transform2D::Translate(x, 1225);
         RenderMesh2D(meshes["heart"], shaders["VertexColor"], modelMatrix);
     }
+
+    modelMatrix = glm::mat3(1);
+    modelMatrix *= transform2D::Translate(950, 320);
+    RenderMesh2D(meshes["userSpaceStar"], shaders["VertexColor"], modelMatrix);
 }

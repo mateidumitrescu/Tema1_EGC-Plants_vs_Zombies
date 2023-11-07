@@ -25,6 +25,7 @@ namespace m1
         float rectangle_center_x, rectangle_center_y;
         float rhombus_center_x, rhombus_center_y;
         float heart_center_x, heart_center_y;
+        float star_center_x, star_center_y;
         glm::mat3 modelMatrix;
         int life_number;
 

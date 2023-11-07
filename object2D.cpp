@@ -82,14 +82,14 @@ Mesh* object2D::CreateRhombus(
 
     std::vector<VertexFormat> vertices =
     {
-        VertexFormat(corner, color),
-        VertexFormat(corner + glm::vec3(length / 4, length / 2, 0), color),
-        VertexFormat(corner + glm::vec3(0, length, 0), color),
-        VertexFormat(corner + glm::vec3(-length / 4, length / 2, 0), color),
-        VertexFormat(corner + glm::vec3(0, length / 10 * 4, 0), color),
-        VertexFormat(corner + glm::vec3(length / 3 * 2, length / 10 * 4, 0), color),
-        VertexFormat(corner + glm::vec3(length / 3 * 2, length / 10 * 6, 0), color),
-        VertexFormat(corner + glm::vec3(0, length / 10 * 6, 0), color),
+        VertexFormat(corner + glm::vec3(length / 4, 0, 0), color),
+        VertexFormat(corner + glm::vec3(length / 2, length / 2, 0), color),
+        VertexFormat(corner + glm::vec3(length / 4, length, 0), color),
+        VertexFormat(corner + glm::vec3(0, length / 2, 0), color),
+        VertexFormat(corner + glm::vec3(length / 4, length / 10 * 3.5, 0), color),
+        VertexFormat(corner + glm::vec3(length / 10 * 9, length / 10 * 3.5, 0), color),
+        VertexFormat(corner + glm::vec3(length / 10 * 9, length / 10 * 6.5, 0), color),
+        VertexFormat(corner + glm::vec3(length / 4, length / 10 * 6.5, 0), color),
 
     };
 
@@ -159,17 +159,16 @@ Mesh* object2D::CreateStar(
 
     std::vector<VertexFormat> vertices =
     {
-        VertexFormat(corner, color),
-        VertexFormat(corner + glm::vec3(length / 4, 0, 0), color),
-        VertexFormat(corner + glm::vec3(length / 2, length / 3, 0), color),
-        VertexFormat(corner + glm::vec3(length / 4 * 3, 0, 0), color),
-        VertexFormat(corner + glm::vec3(length, 0, 0), color),
-        VertexFormat(corner + glm::vec3(length / 10 * 7, - length / 4, 0), color),
-        VertexFormat(corner + glm::vec3(length / 10 * 8, - length / 10 * 6, 0), color),
-        VertexFormat(corner + glm::vec3(length / 2, - length / 10 * 4, 0), color),
-        VertexFormat(corner + glm::vec3(length / 10 * 2, - length / 10 * 6, 0), color),
-        VertexFormat(corner + glm::vec3(length / 10 * 3, length / 4, 0), color),
-
+        VertexFormat(corner + glm::vec3(length / 10, 0, 0), color),
+        VertexFormat(corner + glm::vec3(length / 4, length / 10 * 4, 0), color),
+        VertexFormat(corner + glm::vec3(0, length / 10 * 6.5 , 0), color),
+        VertexFormat(corner + glm::vec3(length / 10 * 3.5, length / 10 * 6.5, 0), color),
+        VertexFormat(corner + glm::vec3(length / 2, length, 0), color),
+        VertexFormat(corner + glm::vec3(length / 10 * 6.5, length / 10 * 6.5, 0), color),
+        VertexFormat(corner + glm::vec3(length, length / 10 * 6.5, 0), color),
+        VertexFormat(corner + glm::vec3(length / 4 * 3, length / 10 * 4, 0), color),
+        VertexFormat(corner + glm::vec3(length / 10 * 9, 0, 0), color),
+        VertexFormat(corner + glm::vec3(length / 2, length / 4, 0), color),
     };
 
     Mesh* star = new Mesh(name);
@@ -182,7 +181,7 @@ Mesh* object2D::CreateStar(
         star->SetDrawMode(GL_TRIANGLES);
 
         // Defining the triangles
-        indices = { 0, 1, 2, 0, 2, 3, 0, 3, 4, 0, 4, 5, 0, 5, 6};
+        indices = {1, 2, 3, 3, 4, 5, 5, 6, 7, 7, 8 , 9, 9, 0, 1, 1, 7, 9, 1, 5, 7, 1, 3, 5};
     }
 
     star->InitFromData(vertices, indices);
