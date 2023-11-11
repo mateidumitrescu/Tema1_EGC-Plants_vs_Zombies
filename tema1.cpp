@@ -1,9 +1,12 @@
 #include <vector>
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 
 #include "lab_m1/tema1/tema1.h"
 #include "lab_m1/tema1/object2D.h"
 #include "lab_m1/tema1/transform2D.h"
+#include "lab_m1/tema1/bonusStar.h"
 
 using namespace std;
 using namespace m1;
@@ -18,13 +21,21 @@ Tema1::~Tema1()
 
 void Tema1::Init()
 {
+    std::srand(static_cast<unsigned>(std::time(nullptr)));
+
     glm::ivec2 resolution = window->GetResolution(); // resolution
-    auto camera = GetSceneCamera(); // camera properties
+    auto camera = GetSceneCamera();                  // camera properties
     camera->SetOrthographic(0, (float)resolution.x, 0, (float)resolution.y, 0.01f, 400);
     camera->SetPosition(glm::vec3(0, 0, 50));
     camera->SetRotation(glm::vec3(0, 0, 0));
     camera->Update();
     GetCameraInput()->SetActive(false);
+
+    starTimer = 0.0f;
+    starGenerationInterval = 4.0f;
+    numberOfGeneratedStars = 0;
+    moneyStars = 0;
+    lastPickedStarIndex = 0;
 
     // corner of the image
     glm::vec3 corner = glm::vec3(0, 0, 0);
@@ -41,13 +52,13 @@ void Tema1::Init()
     // dimension of hearts
     float heartLength = 170;
 
-    // dimension of user space star and "money star"
+    // dimension of user space star, "money star", bonus star
     float userStarDimension = 45;
     float userMoneyStarDimension = 55;
 
     // dimension of enemy (hexagon)
     float hexagonDimension = 200;
-    
+
     // computing  center coordinates of square
     square_center_x = corner.x + squareSide / 2;
     square_center_y = corner.y + squareSide / 2;
@@ -76,28 +87,26 @@ void Tema1::Init()
     life_number = 3;
 
     // creatind mesh for heart
-    Mesh* heart =
-    object2D::CreateHeart(
-    "heart",
-    corner,
-    heartLength,
-    glm::vec3(1, 0, 0),
-    true);
+    Mesh *heart =
+        object2D::CreateHeart(
+            "heart",
+            corner,
+            heartLength,
+            glm::vec3(1, 0, 0),
+            true);
 
     AddMeshToList(heart);
 
-
-
     // color light green for squares: 0.5, 1, 0.5
-    Mesh* square1 = object2D::CreateSquare("square1", corner, squareSide, glm::vec3(0.5f, 1, 0.5f), true);
-    Mesh* square2 = object2D::CreateSquare("square2", corner, squareSide, glm::vec3(0.5f, 1, 0.5f), true);
-    Mesh* square3 = object2D::CreateSquare("square3", corner, squareSide, glm::vec3(0.5f, 1, 0.5f), true);
-    Mesh* square4 = object2D::CreateSquare("square4", corner, squareSide, glm::vec3(0.5f, 1, 0.5f), true);
-    Mesh* square5 = object2D::CreateSquare("square5", corner, squareSide, glm::vec3(0.5f, 1, 0.5f), true);
-    Mesh* square6 = object2D::CreateSquare("square6", corner, squareSide, glm::vec3(0.5f, 1, 0.5f), true);
-    Mesh* square7 = object2D::CreateSquare("square7", corner, squareSide, glm::vec3(0.5f, 1, 0.5f), true);
-    Mesh* square8 = object2D::CreateSquare("square8", corner, squareSide, glm::vec3(0.5f, 1, 0.5f), true);
-    Mesh* square9 = object2D::CreateSquare("square9", corner, squareSide, glm::vec3(0.5f, 1, 0.5f), true);
+    Mesh *square1 = object2D::CreateSquare("square1", corner, squareSide, glm::vec3(0.5f, 1, 0.5f), true);
+    Mesh *square2 = object2D::CreateSquare("square2", corner, squareSide, glm::vec3(0.5f, 1, 0.5f), true);
+    Mesh *square3 = object2D::CreateSquare("square3", corner, squareSide, glm::vec3(0.5f, 1, 0.5f), true);
+    Mesh *square4 = object2D::CreateSquare("square4", corner, squareSide, glm::vec3(0.5f, 1, 0.5f), true);
+    Mesh *square5 = object2D::CreateSquare("square5", corner, squareSide, glm::vec3(0.5f, 1, 0.5f), true);
+    Mesh *square6 = object2D::CreateSquare("square6", corner, squareSide, glm::vec3(0.5f, 1, 0.5f), true);
+    Mesh *square7 = object2D::CreateSquare("square7", corner, squareSide, glm::vec3(0.5f, 1, 0.5f), true);
+    Mesh *square8 = object2D::CreateSquare("square8", corner, squareSide, glm::vec3(0.5f, 1, 0.5f), true);
+    Mesh *square9 = object2D::CreateSquare("square9", corner, squareSide, glm::vec3(0.5f, 1, 0.5f), true);
 
     AddMeshToList(square1);
     AddMeshToList(square2);
@@ -110,97 +119,105 @@ void Tema1::Init()
     AddMeshToList(square9);
 
     // creating squares for user interface where plants will stay
-    Mesh* squareRhombus = object2D::CreateSquare("squareRhombus", corner, squareSide, glm::vec3(5, 5, 5), false);
+    Mesh *squareRhombus = object2D::CreateSquare("squareRhombus", corner, squareSide, glm::vec3(5, 5, 5), false);
     AddMeshToList(squareRhombus);
 
     // barrier on the left where zombies have to go (color red: 1, 0, 0)
-    Mesh* barrierRectangle =
-    object2D::CreateRectangle(
-        "rectangle",
-        corner,
-        widthRectangle,
-        heightRectangle,
-        glm::vec3(1, 0, 0),
-        true);
-    
+    Mesh *barrierRectangle =
+        object2D::CreateRectangle(
+            "rectangle",
+            corner,
+            widthRectangle,
+            heightRectangle,
+            glm::vec3(1, 0, 0),
+            true);
+
     AddMeshToList(barrierRectangle);
 
-    Mesh* orangeRhombus =
-    object2D::CreateRhombus(
-        "orangeRhombus",
-        corner,
-        rhombusLength,
-        glm::vec3(1, 0.5f, 0),
-        true);
-    
+    Mesh *orangeRhombus =
+        object2D::CreateRhombus(
+            "orangeRhombus",
+            corner,
+            rhombusLength,
+            glm::vec3(1, 0.5f, 0),
+            true);
+
     AddMeshToList(orangeRhombus);
 
-    Mesh* blueRhombus =
-    object2D::CreateRhombus(
-        "blueRhombus",
-        corner,
-        rhombusLength,
-        glm::vec3(0, 0, 1),
-        true);
-    
+    Mesh *blueRhombus =
+        object2D::CreateRhombus(
+            "blueRhombus",
+            corner,
+            rhombusLength,
+            glm::vec3(0, 0, 1),
+            true);
+
     AddMeshToList(blueRhombus);
 
-    Mesh* yellowRhombus =
-    object2D::CreateRhombus(
-        "yellowRhombus",
-        corner,
-        rhombusLength,
-        glm::vec3(1, 1, 0),
-        true);
-    
+    Mesh *yellowRhombus =
+        object2D::CreateRhombus(
+            "yellowRhombus",
+            corner,
+            rhombusLength,
+            glm::vec3(1, 1, 0),
+            true);
+
     AddMeshToList(yellowRhombus);
 
-    Mesh* purpleRhombus =
-    object2D::CreateRhombus(
-        "purpleRhombus",
-        corner,
-        rhombusLength,
-        glm::vec3(1, 0, 1),
-        true);
-    
+    Mesh *purpleRhombus =
+        object2D::CreateRhombus(
+            "purpleRhombus",
+            corner,
+            rhombusLength,
+            glm::vec3(1, 0, 1),
+            true);
+
     AddMeshToList(purpleRhombus);
 
     // creating mesh for user space stars
-    Mesh* userSpaceStar =
-    object2D::CreateStar(
-        "userSpaceStar",
-        corner,
-        userStarDimension,
-        glm::vec3(0.6f, 0.6f, 0.6f),
-        true);
-    
+    Mesh *userSpaceStar =
+        object2D::CreateStar(
+            "userSpaceStar",
+            corner,
+            userStarDimension,
+            glm::vec3(0.6f, 0.6f, 0.6f),
+            true);
+
     AddMeshToList(userSpaceStar);
 
+    // randomly rendered star
+    Mesh *bonusStar =
+        object2D::CreateStar(
+            "bonusStar",
+            corner,
+            bonusStarDimension,
+            glm::vec3(0.4f, 0.8f, 0.9f),
+            true);
+
+    AddMeshToList(bonusStar);
+
     // creating mesh for user "money" to buy plants
-    Mesh* userMoneyStar =
-    object2D::CreateStar(
-        "userMoneyStar",
-        corner,
-        userMoneyStarDimension,
-        glm::vec3(1, 0.7f, 0),
-        true);
-    
+    Mesh *userMoneyStar =
+        object2D::CreateStar(
+            "userMoneyStar",
+            corner,
+            userMoneyStarDimension,
+            glm::vec3(1, 0.7f, 0),
+            true);
+
     AddMeshToList(userMoneyStar);
 
-    moneyStars = 5;
-
     // creating mesh for enemy (hexagon)
-    Mesh* blueHexagon =
-    object2D::CreateHexagon(
-        "blueHexagon",
-        corner,
-        hexagonDimension,
-        glm::vec3(0, 0, 1),
-        glm::vec3(0, 1, 0),
-        true);
-    
-    AddMeshToList(blueHexagon);
+    Mesh *blueHexagon =
+        object2D::CreateHexagon(
+            "blueHexagon",
+            corner,
+            hexagonDimension,
+            glm::vec3(0, 0, 1),
+            glm::vec3(0, 1, 0),
+            true);
 
+    AddMeshToList(blueHexagon);
 }
 
 void Tema1::FrameStart()
@@ -260,30 +277,33 @@ void Tema1::Update(float deltaTimeSeconds)
     RenderMesh2D(meshes["square9"], shaders["VertexColor"], modelMatrix);
 
     /* all squares are rendered,
-    now rendering barrier where zombies have to get to */
+   now rendering barrier where zombies have to get to */
 
-    // x = 150 (first square) - 70 (extraSpace) - 
+    // x = 150 (first square) - 70 (extraSpace) -
     modelMatrix = glm::mat3(1);
     modelMatrix *= transform2D::Translate(20, 50);
     RenderMesh2D(meshes["rectangle"], shaders["VertexColor"], modelMatrix);
 
-    std::vector<std::string> colorsRhombus = {"orangeRhombus",
-                                    "blueRhombus",
-                                    "yellowRhombus",
-                                    "purpleRhombus",};
-    
+    std::vector<std::string> colorsRhombus = {
+        "orangeRhombus",
+        "blueRhombus",
+        "yellowRhombus",
+        "purpleRhombus",
+    };
+
     int step = 165;
-    for (auto color : colorsRhombus) {
+    for (auto color : colorsRhombus)
+    {
         modelMatrix = glm::mat3(1);
         modelMatrix *= transform2D::Translate(step, 1225);
         RenderMesh2D(meshes[color], shaders["VertexColor"], modelMatrix);
         step += 350;
     }
-    
 
     // interface for player (squares where plants will stay to be picked)
     step = 0;
-    for (int i = 1; i <= 4; i++) {
+    for (int i = 1; i <= 4; i++)
+    {
         int x = i * 100 + step;
         modelMatrix = glm::mat3(1);
         modelMatrix *= transform2D::Translate(x, 1200);
@@ -293,7 +313,8 @@ void Tema1::Update(float deltaTimeSeconds)
 
     // rendering the number of lives
     step = 225; // 100 (heart length) + 40 (extra space)
-    for (int i = 0; i < life_number; i++) {
+    for (int i = 0; i < life_number; i++)
+    {
         modelMatrix = glm::mat3(1);
         int x = 1600 + i * step;
         modelMatrix *= transform2D::Translate(x, 1225);
@@ -303,9 +324,11 @@ void Tema1::Update(float deltaTimeSeconds)
     // rendering stars for user space to see the cost of each plant
     step = 100;
     int level = 1; // level of plant
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++)
+    {
         int x = step;
-        for (int j = 0; j < level; j++) {
+        for (int j = 0; j < level; j++)
+        {
             modelMatrix = glm::mat3(1);
             modelMatrix *= transform2D::Translate(x, 1140);
             RenderMesh2D(meshes["userSpaceStar"], shaders["VertexColor"], modelMatrix);
@@ -317,7 +340,8 @@ void Tema1::Update(float deltaTimeSeconds)
 
     step = 1510;
     // rendering "money stars"
-    for (int i = 0; i < moneyStars; i++) {
+    for (int i = 0; i < moneyStars; i++)
+    {
         modelMatrix = glm::mat3(1);
         modelMatrix *= transform2D::Translate(step, 1140);
         RenderMesh2D(meshes["userMoneyStar"], shaders["VertexColor"], modelMatrix);
@@ -325,25 +349,98 @@ void Tema1::Update(float deltaTimeSeconds)
     }
 
     modelMatrix = glm::mat3(1);
-    modelMatrix *= transform2D::Translate(1300 , 600);
-    modelMatrix *= transform2D::Translate(hexagon_center_x , hexagon_center_y);
+    modelMatrix *= transform2D::Translate(1300, 600);
+    modelMatrix *= transform2D::Translate(hexagon_center_x, hexagon_center_y);
     modelMatrix *= transform2D::Rotate(0.3926991f);
     modelMatrix *= transform2D::Translate(-hexagon_center_x, -hexagon_center_y);
     RenderMesh2D(meshes["blueHexagon"], shaders["VertexColor"], modelMatrix);
-    
+
+    // rendering another rhombus based on click to drag it on field
+    modelMatrix = glm::mat3(1);
+    if (isButtonPressed && hasSelectedRhombus)
+    {
+        modelMatrix *= transform2D::Translate(mouseX, mouseY);
+        RenderMesh2D(meshes[selectedRhombus], shaders["VertexColor"], modelMatrix);
+    }
+
+    // Create a random number generator (as previously shown)
+
+    starTimer += deltaTimeSeconds;
+
+    if (numberOfGeneratedStars < MAX_STARS) // maximum 5 stars on screen
+    {
+        if (starTimer >= starGenerationInterval)
+        {   
+            // calculating new coordinates only for last star in the array
+            float x = rand() % screenWidth;
+            float y = rand() % screenHeight;
+
+            bonusStars[numberOfGeneratedStars].x = x;
+            bonusStars[numberOfGeneratedStars].y = y;
+            bonusStars[numberOfGeneratedStars].hasBeenPicked = 0;
+
+            numberOfGeneratedStars++;
+            starTimer = 0.0f;
+        }
+    }
+
+    for (int i = 0; i < numberOfGeneratedStars; i++)
+    {
+        if (!bonusStars[i].hasBeenPicked) // checking to render it
+        {
+            glm::mat3 modelMatrix(1); // Initialize the model matrix
+            modelMatrix *= transform2D::Translate(
+                bonusStars[i].x,
+                bonusStars[i].y);
+
+            // Render the star with the updated model matrix
+            RenderMesh2D(meshes["bonusStar"], shaders["VertexColor"], modelMatrix);
+        }
+    }
 }
 
 void Tema1::OnMouseMove(int mouseX, int mouseY, int deltaX, int deltaY)
 {
-
 }
 
 void Tema1::OnMouseBtnPress(int mouseX, int mouseY, int button, int mods)
 {
-    if ()
+    // Mac problems :(
+    mouseY = 2 * (720 - mouseY);
+    mouseX *= 2;
+
+    // check button pressed
+    if (button == 1)
+    {
+        isButtonPressed = 1;
+        // checking if a star was picked
+        for (int i = 0; i < numberOfGeneratedStars; i++)
+        {
+            BonusStar star = bonusStars[i];
+
+            if (mouseX >= star.x && mouseX <= star.x + bonusStarDimension &&
+                mouseY >= star.y && mouseY <= star.y + bonusStarDimension &&
+                moneyStars < 12)
+            {
+                // placing last picked star at the end so new coordinates can be
+                // calculated in Update method
+                for (int j = i; j < numberOfGeneratedStars - 1; j++)
+                {
+                    bonusStars[j] = bonusStars[j + 1];
+                }
+                star.hasBeenPicked = 1; // so it doesn't get rendered before new coord
+                bonusStars[numberOfGeneratedStars - 1] = star;
+                
+                numberOfGeneratedStars--;
+                moneyStars++;
+                lastPickedStarIndex = i;
+
+                break;
+            }
+        }
+    }
 }
 
 void Tema1::OnMouseBtnRelease(int mouseX, int mouseY, int button, int mods)
 {
-
 }

@@ -2,6 +2,10 @@
 
 #include "components/simple_scene.h"
 #include "lab_m1/tema1/transform2D.h"
+#include "lab_m1/tema1/bonusStar.h"
+#include <map>
+
+#define MAX_STARS 5
 
 
 namespace m1
@@ -35,7 +39,26 @@ namespace m1
         int life_number;
         int moneyStars;
 
-        float dragRhombus_x, dragRhombus_y;
+        int isButtonPressed;
+        int hasSelectedRhombus;
+        std::string selectedRhombus;
+        float mouseX, mouseY;
+
+        int screenWidth = 1280;
+        int screenHeight = 720;
+
+        float starTimer;
+        float starGenerationInterval = 2.0f;
+
+        float randomXStar;
+        float randomYStar;
+
+        float bonusStarDimension = 80;
+
+        // array of rendered bonus stars to be picked
+        BonusStar bonusStars[MAX_STARS];
+        int numberOfGeneratedStars;
+        int lastPickedStarIndex;
 
         
     };
