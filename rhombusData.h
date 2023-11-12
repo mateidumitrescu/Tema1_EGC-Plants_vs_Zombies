@@ -7,29 +7,22 @@ class RhombusData
 
 public:
     RhombusData() = default;
-    RhombusData(std::string _color, int _cost);
+    RhombusData(std::string _color, int _cost, float _x, float _y,
+                int _isPlaced, int _mustBeDestroyed, float _scaleX, float _scaleY);
     std::string color;
     int cost;
+    float x;
+    float y;
+    int isPlaced;
+    int mustBeDestroyed;
+    float scaleX;
+    float scaleY;
 
-    void calculateCost()
-    {
-        if (color == "orangeRhombus")
-        {
-            cost = 1;
-        }
-        else if (color == "blueRhombus")
-        {
-            cost = 2;
-        }
-        else if (color == "yellowRhombus")
-        {
-            cost = 3;
-        }
-        else if (color == "purpleRhombus")
-        {
-            cost = 4;
-        }
-    }
+    // calculating cost based on color
+    void calculateCost();
+
+    // setting coordinates for Rhombus in square
+    void setCoordinates(float _x, float _y);
 };
 
 #endif

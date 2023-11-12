@@ -2,8 +2,11 @@
 
 #include "components/simple_scene.h"
 #include "lab_m1/tema1/transform2D.h"
-#include "lab_m1/tema1/bonusStar.h"
+#include "bonusStar.h"
 #include "lab_m1/tema1/rhombusData.h"
+#include "lab_m1/tema1/enemyData.h"
+
+#include <queue>
 
 #define MAX_STARS 5
 
@@ -47,7 +50,10 @@ namespace m1
         int screenHeight = 720;
 
         float starTimer;
-        float starGenerationInterval = 2.0f;
+        float starGenerationInterval;
+
+        float enemyTimer;
+        float enemyGenerationInterval;
 
         float randomXStar;
         float randomYStar;
@@ -58,12 +64,25 @@ namespace m1
         BonusStar bonusStars[MAX_STARS];
         int numberOfGeneratedStars;
         int lastPickedStarIndex;
-        int occupiedPositions[3][3];
+        RhombusData attackRhombus[3][3];
         std::vector<std::string> colorsRhombus = {
             "orangeRhombus",
             "blueRhombus",
             "yellowRhombus",
             "purpleRhombus",
         };
+
+        std::deque<EnemyData> enemies;
+        float enemyStartX;
+
+        std::vector<float> possibleEnemyY = {50, 320, 590};
+        std::vector<std::string> colorsEnemies = {
+            "orangeHexagon",
+            "blueHexagon",
+            "yellowHexagon",
+            "purpleHexagon",
+        };
+
+
     };
 }
