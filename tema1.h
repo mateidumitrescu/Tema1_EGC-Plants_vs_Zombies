@@ -3,6 +3,7 @@
 #include "components/simple_scene.h"
 #include "lab_m1/tema1/transform2D.h"
 #include "lab_m1/tema1/bonusStar.h"
+#include "lab_m1/tema1/rhombusData.h"
 
 #define MAX_STARS 5
 
@@ -39,7 +40,7 @@ namespace m1
 
         int isButtonPressed;
         int hasSelectedRhombus;
-        std::string selectedRhombus;
+        RhombusData selectedRhombus;
         float currentMouseX, currentMouseY;
 
         int screenWidth = 1280;

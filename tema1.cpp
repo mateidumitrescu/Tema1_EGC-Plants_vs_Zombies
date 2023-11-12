@@ -319,7 +319,7 @@ void Tema1::Update(float deltaTimeSeconds)
     if (isButtonPressed && hasSelectedRhombus)
     {
         modelMatrix *= transform2D::Translate(currentMouseX - 50, currentMouseY - 50);
-        RenderMesh2D(meshes[selectedRhombus], shaders["VertexColor"], modelMatrix);
+        RenderMesh2D(meshes[selectedRhombus.color], shaders["VertexColor"], modelMatrix);
     }
 
     // Create a random number generator (as previously shown)
@@ -381,19 +381,24 @@ void Tema1::OnMouseBtnPress(int mouseX, int mouseY, int button, int mods)
                           bonusStarDimension, moneyStars);
 
         // check if a rhombus was picked to drag it
-        selectedRhombus = selectedColor(mouseX, mouseY, squareSide);
-        if (selectedRhombus != "")
+        selectedRhombus.color = selectedColor(mouseX, mouseY, squareSide, moneyStars);
+        if (selectedRhombus.color != "")
         {
+            selectedRhombus.calculateCost(); // calculating cost to see if user has enough money
             currentMouseX = mouseX;
             currentMouseY = mouseY;
-            cout << selectedRhombus << "\n";
             hasSelectedRhombus = 1;
         }
     }
 }
 
 void Tema1::OnMouseBtnRelease(int mouseX, int mouseY, int button, int mods)
-{
+{   
+
+    // checking if user holds a Rhombus to place it in a square
+    // if (isButtonPressed && hasSelectedRhombus) {
+        
+    // }
     isButtonPressed = 0;
     hasSelectedRhombus = 0;
 }

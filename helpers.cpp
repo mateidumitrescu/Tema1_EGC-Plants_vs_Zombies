@@ -32,24 +32,28 @@ void checkIfPickedStar(int mouseX, int mouseY,
     }
 }
 
-std::string selectedColor(int mouseX, int mouseY, int squareSide)
+std::string selectedColor(int mouseX, int mouseY, int squareSide, int moneyStars)
 {
     if (mouseY >= 1200 && mouseY <= 1200 + squareSide)
     {
-        if (mouseX >= 100 && mouseX <= 100 + squareSide)
+        if (mouseX >= 100 && mouseX <= 100 + squareSide && moneyStars >= 1)
         {
             return "orangeRhombus";
         }
-        else if (mouseX >= 450 && mouseX <= 450 + squareSide)
+        else if (mouseX >= 450 && mouseX <= 450 + squareSide && moneyStars >= 2)
         {
             return "blueRhombus";
         }
-        else if (mouseX >= 800 && mouseX <= 800 + squareSide)
+        else if (mouseX >= 800 && mouseX <= 800 + squareSide && moneyStars >= 3)
         {
             return "yellowRhombus";
-        } else if (mouseX >= 1150 && mouseX <= 1150 + squareSide) {
+        } else if (mouseX >= 1150 && mouseX <= 1150 + squareSide && moneyStars >= 4) {
             return "purpleRhombus";
         }
     }
     return "";
+}
+
+void squareToPlace(int mouseX, int mouseY, int squareSide, int &moneyStars, int) {
+
 }

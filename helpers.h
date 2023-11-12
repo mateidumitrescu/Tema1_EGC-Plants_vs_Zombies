@@ -8,4 +8,4 @@ void checkIfPickedStar(int mouseX, int mouseY,
                        int bonusStarDimension, int &moneyStars);
 
 // return the Rhombus color that has been picked
-std::string selectedColor(int mouseX, int mouseY, int squareSide);
+std::string selectedColor(int mouseX, int mouseY, int squareSide, int moneyStars);
