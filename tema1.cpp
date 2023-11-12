@@ -48,8 +48,8 @@ void Tema1::Init()
         {
             attackRhombus[i][j].isPlaced = 0;
             attackRhombus[i][j].mustBeDestroyed = 0;
-            attackRhombus[i][j].scaleX = 1;
-            attackRhombus[i][j].scaleY = 1;
+            attackRhombus[i][j].scaleX = 1.0f;
+            attackRhombus[i][j].scaleY = 1.0f;
         }
     }
 
@@ -282,20 +282,26 @@ void Tema1::Update(float deltaTimeSeconds)
                     transform2D::Translate(
                         attackRhombus[i][j].x,
                         attackRhombus[i][j].y);
-                if (attackRhombus[i][j].mustBeDestroyed)
+                if (attackRhombus[i][j].mustBeDestroyed) // check if it must be destroyed
                 {
-                    cout << "MUST DESTROY IT\n";
-                    attackRhombus[i][i].scaleX -= deltaTimeSeconds;
-                    attackRhombus[i][i].scaleY -= deltaTimeSeconds;
+
+                    attackRhombus[i][j].scaleX -= deltaTimeSeconds;
+                    attackRhombus[i][j].scaleY -= deltaTimeSeconds;
+
                     modelMatrix *= transform2D::Translate(rhombus_center_x, rhombus_center_y);
-                    modelMatrix *= transform2D::Scale(attackRhombus[i][i].scaleX, attackRhombus[i][i].scaleY);
+                    modelMatrix *= transform2D::Scale(attackRhombus[i][j].scaleX, attackRhombus[i][j].scaleY);
                     modelMatrix *= transform2D::Translate(-rhombus_center_x, -rhombus_center_y);
+
                     RenderMesh2D(
                         meshes[attackRhombus[i][j].color],
                         shaders["VertexColor"], modelMatrix);
-                    if (attackRhombus[i][j].scaleX <= 0) { // checking if it finished scaling down
+
+                    if (attackRhombus[i][j].scaleX <= 0.006f) // it got destroyed
+                    { // checking if it finished scaling down
                         attackRhombus[i][j].isPlaced = 0;
                         attackRhombus[i][j].mustBeDestroyed = 0;
+                        attackRhombus[i][j].scaleX = 1.0f;
+                        attackRhombus[i][j].scaleY = 1.0f;
                     }
                 }
                 else
@@ -399,7 +405,7 @@ void Tema1::Update(float deltaTimeSeconds)
                                        enemyStartX,
                                        possibleEnemyY[enemyStartY],
                                        0, 1, 1); // hasReachedBarrier and scale args
-        enemies.push_back(newEnemy);       // adding enemy
+        enemies.push_back(newEnemy);             // adding enemy
         enemyTimer = 0.0f;
     }
 

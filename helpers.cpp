@@ -68,6 +68,8 @@ void placeRhombus(int mouseX, int mouseY, int squareSide,
         mouseY >= 50 && mouseY <= 50 + squareSide &&
         !attackRhombus[0][0].isPlaced)
     {
+        selectedRhombus.scaleX = 1.0f;
+        selectedRhombus.scaleY = 1.0f;
         selectedRhombus.mustBeDestroyed = 0;
         selectedRhombus.isPlaced = 1;
         selectedRhombus.setCoordinates(150 + fit, 50 + fit);
@@ -79,6 +81,8 @@ void placeRhombus(int mouseX, int mouseY, int squareSide,
              mouseY >= 50 && mouseY <= 50 + squareSide &&
              !attackRhombus[0][1].isPlaced)
     {
+        selectedRhombus.scaleX = 1.0f;
+        selectedRhombus.scaleY = 1.0f;
         selectedRhombus.mustBeDestroyed = 0;
         selectedRhombus.isPlaced = 1;
         selectedRhombus.setCoordinates(420 + fit, 50 + fit);
@@ -90,6 +94,8 @@ void placeRhombus(int mouseX, int mouseY, int squareSide,
              mouseY >= 50 && mouseY <= 50 + squareSide &&
              !attackRhombus[0][2].isPlaced)
     {
+        selectedRhombus.scaleX = 1.0f;
+        selectedRhombus.scaleY = 1.0f;
         selectedRhombus.mustBeDestroyed = 0;
         selectedRhombus.isPlaced = 1;
         selectedRhombus.setCoordinates(690 + fit, 50 + fit);
@@ -101,6 +107,8 @@ void placeRhombus(int mouseX, int mouseY, int squareSide,
              mouseY >= 320 && mouseY <= 320 + squareSide &&
              !attackRhombus[1][0].isPlaced)
     {
+        selectedRhombus.scaleX = 1.0f;
+        selectedRhombus.scaleY = 1.0f;
         selectedRhombus.mustBeDestroyed = 0;
         selectedRhombus.isPlaced = 1;
         selectedRhombus.setCoordinates(150 + fit, 320 + fit);
@@ -112,6 +120,8 @@ void placeRhombus(int mouseX, int mouseY, int squareSide,
              mouseY >= 320 && mouseY <= 320 + squareSide &&
              !attackRhombus[1][1].isPlaced)
     {
+        selectedRhombus.scaleX = 1.0f;
+        selectedRhombus.scaleY = 1.0f;
         selectedRhombus.mustBeDestroyed = 0;
         selectedRhombus.isPlaced = 1;
         selectedRhombus.setCoordinates(420 + fit, 320 + fit);
@@ -123,6 +133,8 @@ void placeRhombus(int mouseX, int mouseY, int squareSide,
              mouseY >= 320 && mouseY <= 320 + squareSide &&
              !attackRhombus[1][2].isPlaced)
     {
+        selectedRhombus.scaleX = 1.0f;
+        selectedRhombus.scaleY = 1.0f;
         selectedRhombus.mustBeDestroyed = 0;
         selectedRhombus.isPlaced = 1;
         selectedRhombus.setCoordinates(690 + fit, 320 + fit);
@@ -134,6 +146,8 @@ void placeRhombus(int mouseX, int mouseY, int squareSide,
              mouseY >= 590 && mouseY <= 590 + squareSide &&
              !attackRhombus[2][0].isPlaced)
     {
+        selectedRhombus.scaleX = 1.0f;
+        selectedRhombus.scaleY = 1.0f;
         selectedRhombus.mustBeDestroyed = 0;
         selectedRhombus.isPlaced = 1;
         selectedRhombus.setCoordinates(150 + fit, 590 + fit);
@@ -145,6 +159,8 @@ void placeRhombus(int mouseX, int mouseY, int squareSide,
              mouseY >= 590 && mouseY <= 590 + squareSide &&
              !attackRhombus[2][1].isPlaced)
     {
+        selectedRhombus.scaleX = 1.0f;
+        selectedRhombus.scaleY = 1.0f;
         selectedRhombus.mustBeDestroyed = 0;
         selectedRhombus.isPlaced = 1;
         selectedRhombus.setCoordinates(420 + fit, 590 + fit);
@@ -156,6 +172,8 @@ void placeRhombus(int mouseX, int mouseY, int squareSide,
              mouseY >= 590 && mouseY <= 590 + squareSide &&
              !attackRhombus[2][2].isPlaced)
     {
+        selectedRhombus.scaleX = 1.0f;
+        selectedRhombus.scaleY = 1.0f;
         selectedRhombus.mustBeDestroyed = 0;
         selectedRhombus.isPlaced = 1;
         selectedRhombus.setCoordinates(690 + fit, 590 + fit);
