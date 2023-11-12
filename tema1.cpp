@@ -7,6 +7,7 @@
 #include "lab_m1/tema1/object2D.h"
 #include "lab_m1/tema1/transform2D.h"
 #include "lab_m1/tema1/bonusStar.h"
+#include "lab_m1/tema1/helpers.h"
 
 using namespace std;
 using namespace m1;
@@ -32,16 +33,26 @@ void Tema1::Init()
     GetCameraInput()->SetActive(false);
 
     starTimer = 0.0f;
-    starGenerationInterval = 4.0f;
+    starGenerationInterval = 6.0f;
     numberOfGeneratedStars = 0;
     moneyStars = 0;
     lastPickedStarIndex = 0;
+    isButtonPressed = 0;
+
+    // initializing a matrix that stores where there are plants
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            occupiedPositions[i][j] = 0;
+        }
+    }
 
     // corner of the image
     glm::vec3 corner = glm::vec3(0, 0, 0);
 
     // length of a square side where plants will be placed
-    float squareSide = 200;
+    squareSide = 200;
     // width and height of the barriero on the left
     float widthRectangle = 100;
     float heightRectangle = 740; // 3 x squareSide + 2 x extraSpaces
@@ -98,25 +109,8 @@ void Tema1::Init()
     AddMeshToList(heart);
 
     // color light green for squares: 0.5, 1, 0.5
-    Mesh *square1 = object2D::CreateSquare("square1", corner, squareSide, glm::vec3(0.5f, 1, 0.5f), true);
-    Mesh *square2 = object2D::CreateSquare("square2", corner, squareSide, glm::vec3(0.5f, 1, 0.5f), true);
-    Mesh *square3 = object2D::CreateSquare("square3", corner, squareSide, glm::vec3(0.5f, 1, 0.5f), true);
-    Mesh *square4 = object2D::CreateSquare("square4", corner, squareSide, glm::vec3(0.5f, 1, 0.5f), true);
-    Mesh *square5 = object2D::CreateSquare("square5", corner, squareSide, glm::vec3(0.5f, 1, 0.5f), true);
-    Mesh *square6 = object2D::CreateSquare("square6", corner, squareSide, glm::vec3(0.5f, 1, 0.5f), true);
-    Mesh *square7 = object2D::CreateSquare("square7", corner, squareSide, glm::vec3(0.5f, 1, 0.5f), true);
-    Mesh *square8 = object2D::CreateSquare("square8", corner, squareSide, glm::vec3(0.5f, 1, 0.5f), true);
-    Mesh *square9 = object2D::CreateSquare("square9", corner, squareSide, glm::vec3(0.5f, 1, 0.5f), true);
-
-    AddMeshToList(square1);
-    AddMeshToList(square2);
-    AddMeshToList(square3);
-    AddMeshToList(square4);
-    AddMeshToList(square5);
-    AddMeshToList(square6);
-    AddMeshToList(square7);
-    AddMeshToList(square8);
-    AddMeshToList(square9);
+    Mesh *squareGreen = object2D::CreateSquare("squareGreen", corner, squareSide, glm::vec3(0.5f, 1, 0.5f), true);
+    AddMeshToList(squareGreen);
 
     // creating squares for user interface where plants will stay
     Mesh *squareRhombus = object2D::CreateSquare("squareRhombus", corner, squareSide, glm::vec3(5, 5, 5), false);
@@ -233,48 +227,19 @@ void Tema1::FrameStart()
 
 void Tema1::Update(float deltaTimeSeconds)
 {
-    // rendering each square for plants
-    modelMatrix = glm::mat3(1);
-    modelMatrix *= transform2D::Translate(150, 50); // first x = 150, y = 50
-    RenderMesh2D(meshes["square1"], shaders["VertexColor"], modelMatrix);
-
-    // incrementing x = 150 + 200 (square length) + 70 (extra spacing)
-    modelMatrix = glm::mat3(1);
-    modelMatrix *= transform2D::Translate(420, 50);
-    RenderMesh2D(meshes["square2"], shaders["VertexColor"], modelMatrix);
-
-    // incrementing again + 200 + 70
-    modelMatrix = glm::mat3(1);
-    modelMatrix *= transform2D::Translate(690, 50);
-    RenderMesh2D(meshes["square3"], shaders["VertexColor"], modelMatrix);
-
-    // one line upper, incrementing y = 50 + 200 (square length) + 70 (extra space)
-    modelMatrix = glm::mat3(1);
-    modelMatrix *= transform2D::Translate(150, 320);
-    RenderMesh2D(meshes["square4"], shaders["VertexColor"], modelMatrix);
-
-    // incrementing on same line x
-    modelMatrix = glm::mat3(1);
-    modelMatrix *= transform2D::Translate(420, 320);
-    RenderMesh2D(meshes["square5"], shaders["VertexColor"], modelMatrix);
-
-    modelMatrix = glm::mat3(1);
-    modelMatrix *= transform2D::Translate(690, 320);
-    RenderMesh2D(meshes["square6"], shaders["VertexColor"], modelMatrix);
-
-    // one line upper, incrementing y = 320 + 200 (square length) + 70 extra space
-    modelMatrix = glm::mat3(1);
-    modelMatrix *= transform2D::Translate(150, 590);
-    RenderMesh2D(meshes["square7"], shaders["VertexColor"], modelMatrix);
-
-    // same line, x = 150 + 200 + 70
-    modelMatrix = glm::mat3(1);
-    modelMatrix *= transform2D::Translate(420, 590);
-    RenderMesh2D(meshes["square8"], shaders["VertexColor"], modelMatrix);
-
-    modelMatrix = glm::mat3(1);
-    modelMatrix *= transform2D::Translate(690, 590);
-    RenderMesh2D(meshes["square9"], shaders["VertexColor"], modelMatrix);
+    // rendering squares for plants
+    int step = 270;
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            float x = i * step + 150;
+            float y = j * step + 50;
+            modelMatrix = glm::mat3(1);
+            modelMatrix *= transform2D::Translate(x, y); // first x = 150, y = 50
+            RenderMesh2D(meshes["squareGreen"], shaders["VertexColor"], modelMatrix);
+        }
+    }
 
     /* all squares are rendered,
    now rendering barrier where zombies have to get to */
@@ -284,14 +249,8 @@ void Tema1::Update(float deltaTimeSeconds)
     modelMatrix *= transform2D::Translate(20, 50);
     RenderMesh2D(meshes["rectangle"], shaders["VertexColor"], modelMatrix);
 
-    std::vector<std::string> colorsRhombus = {
-        "orangeRhombus",
-        "blueRhombus",
-        "yellowRhombus",
-        "purpleRhombus",
-    };
 
-    int step = 165;
+    step = 165;
     for (auto color : colorsRhombus)
     {
         modelMatrix = glm::mat3(1);
@@ -359,7 +318,7 @@ void Tema1::Update(float deltaTimeSeconds)
     modelMatrix = glm::mat3(1);
     if (isButtonPressed && hasSelectedRhombus)
     {
-        modelMatrix *= transform2D::Translate(mouseX, mouseY);
+        modelMatrix *= transform2D::Translate(currentMouseX - 50, currentMouseY - 50);
         RenderMesh2D(meshes[selectedRhombus], shaders["VertexColor"], modelMatrix);
     }
 
@@ -370,7 +329,7 @@ void Tema1::Update(float deltaTimeSeconds)
     if (numberOfGeneratedStars < MAX_STARS) // maximum 5 stars on screen
     {
         if (starTimer >= starGenerationInterval)
-        {   
+        {
             // calculating new coordinates only for last star in the array
             float x = rand() % screenWidth;
             float y = rand() % screenHeight;
@@ -401,6 +360,9 @@ void Tema1::Update(float deltaTimeSeconds)
 
 void Tema1::OnMouseMove(int mouseX, int mouseY, int deltaX, int deltaY)
 {
+    // Mac problems :(
+    currentMouseY = 2 * (720 - mouseY);
+    currentMouseX = 2 * mouseX;
 }
 
 void Tema1::OnMouseBtnPress(int mouseX, int mouseY, int button, int mods)
@@ -414,33 +376,24 @@ void Tema1::OnMouseBtnPress(int mouseX, int mouseY, int button, int mods)
     {
         isButtonPressed = 1;
         // checking if a star was picked
-        for (int i = 0; i < numberOfGeneratedStars; i++)
+        checkIfPickedStar(mouseX, mouseY,
+                          bonusStars, numberOfGeneratedStars,
+                          bonusStarDimension, moneyStars);
+
+        // check if a rhombus was picked to drag it
+        selectedRhombus = selectedColor(mouseX, mouseY, squareSide);
+        if (selectedRhombus != "")
         {
-            BonusStar star = bonusStars[i];
-
-            if (mouseX >= star.x && mouseX <= star.x + bonusStarDimension &&
-                mouseY >= star.y && mouseY <= star.y + bonusStarDimension &&
-                moneyStars < 12)
-            {
-                // placing last picked star at the end so new coordinates can be
-                // calculated in Update method
-                for (int j = i; j < numberOfGeneratedStars - 1; j++)
-                {
-                    bonusStars[j] = bonusStars[j + 1];
-                }
-                star.hasBeenPicked = 1; // so it doesn't get rendered before new coord
-                bonusStars[numberOfGeneratedStars - 1] = star;
-                
-                numberOfGeneratedStars--;
-                moneyStars++;
-                lastPickedStarIndex = i;
-
-                break;
-            }
+            currentMouseX = mouseX;
+            currentMouseY = mouseY;
+            cout << selectedRhombus << "\n";
+            hasSelectedRhombus = 1;
         }
     }
 }
 
 void Tema1::OnMouseBtnRelease(int mouseX, int mouseY, int button, int mods)
 {
+    isButtonPressed = 0;
+    hasSelectedRhombus = 0;
 }

@@ -82,14 +82,14 @@ Mesh* object2D::CreateRhombus(
 
     std::vector<VertexFormat> vertices =
     {
-        VertexFormat(corner + glm::vec3(length / 4, 0, 0), color),
-        VertexFormat(corner + glm::vec3(length / 2, length / 2, 0), color),
-        VertexFormat(corner + glm::vec3(length / 4, length, 0), color),
-        VertexFormat(corner + glm::vec3(0, length / 2, 0), color),
-        VertexFormat(corner + glm::vec3(length / 4, length / 10 * 3.5, 0), color),
-        VertexFormat(corner + glm::vec3(length / 10 * 9, length / 10 * 3.5, 0), color),
-        VertexFormat(corner + glm::vec3(length / 10 * 9, length / 10 * 6.5, 0), color),
-        VertexFormat(corner + glm::vec3(length / 4, length / 10 * 6.5, 0), color),
+        VertexFormat(corner + glm::vec3(length / 4, 0, 2), color),
+        VertexFormat(corner + glm::vec3(length / 2, length / 2, 2), color),
+        VertexFormat(corner + glm::vec3(length / 4, length, 2), color),
+        VertexFormat(corner + glm::vec3(0, length / 2, 2), color),
+        VertexFormat(corner + glm::vec3(length / 4, length / 10 * 3.5, 2), color),
+        VertexFormat(corner + glm::vec3(length / 10 * 9, length / 10 * 3.5, 2), color),
+        VertexFormat(corner + glm::vec3(length / 10 * 9, length / 10 * 6.5, 2), color),
+        VertexFormat(corner + glm::vec3(length / 4, length / 10 * 6.5, 2), color),
 
     };
 
@@ -159,16 +159,16 @@ Mesh* object2D::CreateStar(
 
     std::vector<VertexFormat> vertices =
     {
-        VertexFormat(corner + glm::vec3(length / 10, 0, 3), color),
-        VertexFormat(corner + glm::vec3(length / 4, length / 10 * 4, 3), color),
-        VertexFormat(corner + glm::vec3(0, length / 10 * 6.5 , 3), color),
-        VertexFormat(corner + glm::vec3(length / 10 * 3.5, length / 10 * 6.5, 3), color),
-        VertexFormat(corner + glm::vec3(length / 2, length, 3), color),
-        VertexFormat(corner + glm::vec3(length / 10 * 6.5, length / 10 * 6.5, 3), color),
-        VertexFormat(corner + glm::vec3(length, length / 10 * 6.5, 3), color),
-        VertexFormat(corner + glm::vec3(length / 4 * 3, length / 10 * 4, 3), color),
-        VertexFormat(corner + glm::vec3(length / 10 * 9, 0, 3), color),
-        VertexFormat(corner + glm::vec3(length / 2, length / 4, 3), color),
+        VertexFormat(corner + glm::vec3(length / 10, 0, 5), color),
+        VertexFormat(corner + glm::vec3(length / 4, length / 10 * 4, 5), color),
+        VertexFormat(corner + glm::vec3(0, length / 10 * 6.5 , 5), color),
+        VertexFormat(corner + glm::vec3(length / 10 * 3.5, length / 10 * 6.5, 5), color),
+        VertexFormat(corner + glm::vec3(length / 2, length, 5), color),
+        VertexFormat(corner + glm::vec3(length / 10 * 6.5, length / 10 * 6.5, 5), color),
+        VertexFormat(corner + glm::vec3(length, length / 10 * 6.5, 5), color),
+        VertexFormat(corner + glm::vec3(length / 4 * 3, length / 10 * 4, 5), color),
+        VertexFormat(corner + glm::vec3(length / 10 * 9, 0, 5), color),
+        VertexFormat(corner + glm::vec3(length / 2, length / 4, 5), color),
     };
 
     Mesh* star = new Mesh(name);
@@ -200,19 +200,19 @@ Mesh* object2D::CreateHexagon(
 
     std::vector<VertexFormat> vertices =
     {
-        VertexFormat(corner + glm::vec3(length / 3.5, length / 10 * 0.5, 1), colorBigHex),
-        VertexFormat(corner + glm::vec3(length / 10 * 0.5, length / 2, 1), colorBigHex),
-        VertexFormat(corner + glm::vec3(length / 3.5, length / 10 * 9.5, 1), colorBigHex),
-        VertexFormat(corner + glm::vec3(length / 3.5 * 2.5, length / 10 * 9.5, 1), colorBigHex),
-        VertexFormat(corner + glm::vec3(length / 10 * 9.5, length / 2, 1), colorBigHex),
-        VertexFormat(corner + glm::vec3(length / 3.5 * 2.5, length / 10 * 0.5, 1), colorBigHex),
+        VertexFormat(corner + glm::vec3(length / 3.5, length / 10 * 0.5, 3), colorBigHex),
+        VertexFormat(corner + glm::vec3(length / 10 * 0.5, length / 2, 3), colorBigHex),
+        VertexFormat(corner + glm::vec3(length / 3.5, length / 10 * 9.5, 3), colorBigHex),
+        VertexFormat(corner + glm::vec3(length / 3.5 * 2.5, length / 10 * 9.5, 3), colorBigHex),
+        VertexFormat(corner + glm::vec3(length / 10 * 9.5, length / 2, 3), colorBigHex),
+        VertexFormat(corner + glm::vec3(length / 3.5 * 2.5, length / 10 * 0.5, 3), colorBigHex),
         
-        VertexFormat(corner + glm::vec3(length / 10 * 6.2, length / 10 * 2, 2), colorSmallHex),
-        VertexFormat(corner + glm::vec3(length / 10 * 3.7, length / 10 * 2, 2), colorSmallHex),
-        VertexFormat(corner + glm::vec3(length / 10 * 2, length / 2, 2), colorSmallHex),
-        VertexFormat(corner + glm::vec3(length / 10 * 3.7, length / 10 * 8, 2), colorSmallHex),
-        VertexFormat(corner + glm::vec3(length / 10 * 6.2, length / 10 * 8, 2), colorSmallHex),
-        VertexFormat(corner + glm::vec3(length / 10 * 8, length / 2, 2), colorSmallHex),        
+        VertexFormat(corner + glm::vec3(length / 10 * 6.2, length / 10 * 2, 4), colorSmallHex),
+        VertexFormat(corner + glm::vec3(length / 10 * 3.7, length / 10 * 2, 4), colorSmallHex),
+        VertexFormat(corner + glm::vec3(length / 10 * 2, length / 2, 4), colorSmallHex),
+        VertexFormat(corner + glm::vec3(length / 10 * 3.7, length / 10 * 8, 4), colorSmallHex),
+        VertexFormat(corner + glm::vec3(length / 10 * 6.2, length / 10 * 8, 4), colorSmallHex),
+        VertexFormat(corner + glm::vec3(length / 10 * 8, length / 2, 4), colorSmallHex),        
     };
 
     Mesh* hexagon = new Mesh(name);
