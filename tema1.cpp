@@ -71,6 +71,7 @@ void Tema1::Init()
     // dimension of user space star, "money star", bonus star
     float userStarDimension = 45;
     float userMoneyStarDimension = 55;
+    float shootingStarDimension = 70;
 
     // dimension of enemy (hexagon)
     float hexagonDimension = 170;
@@ -250,6 +251,46 @@ void Tema1::Init()
             true);
 
     AddMeshToList(yellowHexagon);
+
+    Mesh *shootingOrangeStar =
+        object2D::CreateStar(
+            "shootingOrangeStar",
+            corner,
+            shootingStarDimension,
+            glm::vec3(1, 0.7f, 0),
+            true);
+
+    AddMeshToList(shootingOrangeStar);
+
+    Mesh *shootingBlueStar =
+        object2D::CreateStar(
+            "shootingBlueStar",
+            corner,
+            shootingStarDimension,
+            glm::vec3(1, 0.7f, 0),
+            true);
+
+    AddMeshToList(shootingBlueStar);
+
+    Mesh *shootingYellowStar =
+        object2D::CreateStar(
+            "shootingYellowStar",
+            corner,
+            shootingStarDimension,
+            glm::vec3(1, 0.7f, 0),
+            true);
+
+    AddMeshToList(shootingYellowStar);
+
+    Mesh *shootingPurpleStar =
+        object2D::CreateStar(
+            "shootingPurpleStar",
+            corner,
+            shootingStarDimension,
+            glm::vec3(1, 0.7f, 0),
+            true);
+
+    AddMeshToList(shootingPurpleStar);
 }
 
 void Tema1::FrameStart()
@@ -495,6 +536,7 @@ void Tema1::OnMouseBtnPress(int mouseX, int mouseY, int button, int mods)
         selectedRhombus.color = selectedColor(mouseX, mouseY, squareSide, moneyStars);
         if (selectedRhombus.color != "")
         {
+            selectedRhombus.setStar();
             selectedRhombus.calculateCost(); // calculating cost to see if user has enough money based on color
             currentMouseX = mouseX;
             currentMouseY = mouseY;
