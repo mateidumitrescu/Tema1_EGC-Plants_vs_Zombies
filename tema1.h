@@ -3,7 +3,7 @@
 #include "components/simple_scene.h"
 #include "lab_m1/tema1/transform2D.h"
 #include "bonusStar.h"
-#include "lab_m1/tema1/rhombusData.h"
+#include "rhombusData.h"
 #include "lab_m1/tema1/enemyData.h"
 
 #include <queue>
@@ -40,6 +40,9 @@ namespace m1
         int life_number;
         int moneyStars;
         int squareSide;
+        int step; // used in for's for rendering
+        int i, j;
+        float rhombusLength;
 
         int isButtonPressed;
         int hasSelectedRhombus;

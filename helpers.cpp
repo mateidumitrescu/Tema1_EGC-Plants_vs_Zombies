@@ -2,6 +2,7 @@
 #include "lab_m1/tema1/tema1.h"
 #include "lab_m1/tema1/bonusStar.h"
 
+
 void checkIfPickedStar(int mouseX, int mouseY,
                        BonusStar *bonusStars, int &numberOfGeneratedStars,
                        int bonusStarDimension, int &moneyStars)
@@ -68,6 +69,7 @@ void placeRhombus(int mouseX, int mouseY, int squareSide,
         mouseY >= 50 && mouseY <= 50 + squareSide &&
         !attackRhombus[0][0].isPlaced)
     {
+        selectedRhombus.line = 0;
         selectedRhombus.scaleX = 1.0f;
         selectedRhombus.scaleY = 1.0f;
         selectedRhombus.mustBeDestroyed = 0;
@@ -81,6 +83,7 @@ void placeRhombus(int mouseX, int mouseY, int squareSide,
              mouseY >= 50 && mouseY <= 50 + squareSide &&
              !attackRhombus[0][1].isPlaced)
     {
+        selectedRhombus.line = 0;
         selectedRhombus.scaleX = 1.0f;
         selectedRhombus.scaleY = 1.0f;
         selectedRhombus.mustBeDestroyed = 0;
@@ -94,6 +97,7 @@ void placeRhombus(int mouseX, int mouseY, int squareSide,
              mouseY >= 50 && mouseY <= 50 + squareSide &&
              !attackRhombus[0][2].isPlaced)
     {
+        selectedRhombus.line = 0;
         selectedRhombus.scaleX = 1.0f;
         selectedRhombus.scaleY = 1.0f;
         selectedRhombus.mustBeDestroyed = 0;
@@ -107,6 +111,7 @@ void placeRhombus(int mouseX, int mouseY, int squareSide,
              mouseY >= 320 && mouseY <= 320 + squareSide &&
              !attackRhombus[1][0].isPlaced)
     {
+        selectedRhombus.line = 1;
         selectedRhombus.scaleX = 1.0f;
         selectedRhombus.scaleY = 1.0f;
         selectedRhombus.mustBeDestroyed = 0;
@@ -120,6 +125,7 @@ void placeRhombus(int mouseX, int mouseY, int squareSide,
              mouseY >= 320 && mouseY <= 320 + squareSide &&
              !attackRhombus[1][1].isPlaced)
     {
+        selectedRhombus.line = 1;
         selectedRhombus.scaleX = 1.0f;
         selectedRhombus.scaleY = 1.0f;
         selectedRhombus.mustBeDestroyed = 0;
@@ -133,6 +139,7 @@ void placeRhombus(int mouseX, int mouseY, int squareSide,
              mouseY >= 320 && mouseY <= 320 + squareSide &&
              !attackRhombus[1][2].isPlaced)
     {
+        selectedRhombus.line = 1;
         selectedRhombus.scaleX = 1.0f;
         selectedRhombus.scaleY = 1.0f;
         selectedRhombus.mustBeDestroyed = 0;
@@ -146,6 +153,7 @@ void placeRhombus(int mouseX, int mouseY, int squareSide,
              mouseY >= 590 && mouseY <= 590 + squareSide &&
              !attackRhombus[2][0].isPlaced)
     {
+        selectedRhombus.line = 2;
         selectedRhombus.scaleX = 1.0f;
         selectedRhombus.scaleY = 1.0f;
         selectedRhombus.mustBeDestroyed = 0;
@@ -159,6 +167,7 @@ void placeRhombus(int mouseX, int mouseY, int squareSide,
              mouseY >= 590 && mouseY <= 590 + squareSide &&
              !attackRhombus[2][1].isPlaced)
     {
+        selectedRhombus.line = 2;
         selectedRhombus.scaleX = 1.0f;
         selectedRhombus.scaleY = 1.0f;
         selectedRhombus.mustBeDestroyed = 0;
@@ -172,6 +181,7 @@ void placeRhombus(int mouseX, int mouseY, int squareSide,
              mouseY >= 590 && mouseY <= 590 + squareSide &&
              !attackRhombus[2][2].isPlaced)
     {
+        selectedRhombus.line = 2;
         selectedRhombus.scaleX = 1.0f;
         selectedRhombus.scaleY = 1.0f;
         selectedRhombus.mustBeDestroyed = 0;
@@ -197,7 +207,7 @@ void checkIfDestroyRhombus(int mouseX, int mouseY, int squareSide,
              mouseY >= 50 && mouseY <= 50 + squareSide &&
              attackRhombus[0][1].isPlaced)
     {
-       attackRhombus[0][1].mustBeDestroyed = 1;
+        attackRhombus[0][1].mustBeDestroyed = 1;
         return;
     }
     else if (mouseX >= 690 && mouseX <= 690 + squareSide &&
@@ -248,5 +258,19 @@ void checkIfDestroyRhombus(int mouseX, int mouseY, int squareSide,
     {
         attackRhombus[2][2].mustBeDestroyed = 1;
         return;
+    }
+}
+
+void checkCollision(int enemyLine, float enemyX, RhombusData attackRhombus[3][3], float rhombusLength)
+{
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            // checking collision here
+            if (attackRhombus[i][j].isPlaced &&
+            enemyLine == i &&
+            enemyX <= attackRhombus[i][j].x + rhombusLength) {
+                attackRhombus[i][j].mustBeDestroyed = 1;
+            }
+        }
     }
 }

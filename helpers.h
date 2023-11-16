@@ -1,6 +1,7 @@
 #pragma once
 #include "bonusStar.h"
 #include "rhombusData.h"
+#include "enemyData.h"
 
 #include <string>
 
@@ -21,3 +22,6 @@ void placeRhombus(int mouseX, int mouseY, int squareSide,
 // check if a rhombus must be destroyed by clicking it
 void checkIfDestroyRhombus(int mouseX, int mouseY, int squareSide,
                            RhombusData attackRhombus[3][3]);
+
+// check enemy-rhombus collision
+void checkCollision(int enemyLine, float enemyX, RhombusData attackRhombus[3][3], float rhombusLength);

@@ -8,11 +8,13 @@ class EnemyData
 public:
     EnemyData() = default;
     EnemyData(std::string _color, int _life, float _x, float _y,
+              int _line,
               int _hasReachedBarrier, float _scaleX, float _scaleY);
     std::string color;
     int life;
     float x;
     float y;
+    int line;
     int hasReachedBarrier;
     float scaleX;
     float scaleY;
