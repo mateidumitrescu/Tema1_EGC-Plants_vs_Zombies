@@ -4,6 +4,8 @@
 #include "enemyData.h"
 #include <queue>
 
+#include "shootingStarData.h"
+
 #include "components/simple_scene.h"
 
 class RhombusData : public gfxc::SimpleScene
@@ -17,7 +19,9 @@ public:
                 int _isPlaced, int _mustBeDestroyed,
                 float _scaleX, float _scaleY,
                 int _line,
-                std::string _shootingStar);
+                std::string _shootingStarType,
+                float _shootingGenerationInterval, float _shootingTimer,
+                std::vector<ShootingStarData> _stars);
     std::string colorToCheck;
     std::string color;
     int cost;
@@ -28,7 +32,10 @@ public:
     float scaleX;
     float scaleY;
     int line;
-    std::string shootingStar;
+    std::string shootingStarType;
+    float shootingGenerationInterval;
+    float shootingTimer;
+    std::vector<ShootingStarData> stars;
 
     // calculating cost based on color
     void calculateCost();
@@ -40,7 +47,7 @@ public:
     void setStar();
 
     // shooting if there is an enemy on line with same color
-    void shoot(std::deque<EnemyData> enemies);
+    void shoot(std::deque<EnemyData> enemies, float deltaTimeSeconds, float rhombusLength);
 };
 
 #endif

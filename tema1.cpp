@@ -307,6 +307,37 @@ void Tema1::FrameStart()
 
 void Tema1::Update(float deltaTimeSeconds)
 {
+    if (numberOfGeneratedStars < MAX_STARS) // maximum 5 stars on screen
+    {
+        if (starTimer >= starGenerationInterval)
+        {
+            // calculating new coordinates only for last star in the array
+            float x = rand() % screenWidth;
+            float y = rand() % screenHeight;
+
+            bonusStars[numberOfGeneratedStars].x = x;
+            bonusStars[numberOfGeneratedStars].y = y;
+            bonusStars[numberOfGeneratedStars].hasBeenPicked = 0;
+
+            numberOfGeneratedStars++;
+            starTimer = 0.0f;
+        }
+    }
+
+    for (i = 0; i < numberOfGeneratedStars; i++)
+    {
+        if (!bonusStars[i].hasBeenPicked) // checking to render it
+        {
+            glm::mat3 modelMatrix(1); // Initialize the model matrix
+            modelMatrix *= transform2D::Translate(
+                bonusStars[i].x,
+                bonusStars[i].y);
+
+            // Render the star with the updated model matrix
+            RenderMesh2D(meshes["bonusStar"], shaders["VertexColor"], modelMatrix);
+        }
+    }
+
     // counting to render another mesh based on timer
     starTimer += deltaTimeSeconds;
     enemyTimer += deltaTimeSeconds;
@@ -349,7 +380,7 @@ void Tema1::Update(float deltaTimeSeconds)
                         shaders["VertexColor"], modelMatrix);
 
                     if (attackRhombus[i][j].scaleX <= 0.006f) // it got destroyed
-                    { // checking if it finished scaling down
+                    {                                         // checking if it finished scaling down
                         attackRhombus[i][j].isPlaced = 0;
                         attackRhombus[i][j].mustBeDestroyed = 0;
                         attackRhombus[i][j].scaleX = 1.0f;
@@ -359,10 +390,17 @@ void Tema1::Update(float deltaTimeSeconds)
                 else
                 {
                     // shooting if there is an enemy on line with same color
-                    attackRhombus[i][j].shoot(enemies);
+                    attackRhombus[i][j].shoot(enemies, deltaTimeSeconds, rhombusLength);
                     RenderMesh2D(
                         meshes[attackRhombus[i][j].color],
                         shaders["VertexColor"], modelMatrix);
+                    for (int k = 0; k < attackRhombus[i][j].stars.size(); k++)
+                    { // TREBUIE SA FAC UN VECTOR DE STELE IN MAIN!!!
+                        attackRhombus[i][j].stars[k].x += deltaTimeSeconds * 200;
+                        modelMatrix = glm::mat3(1);
+                        modelMatrix *= transform2D::Translate(attackRhombus[i][j].stars[k].x, attackRhombus[i][j].stars[k].y);
+                        RenderMesh2D(meshes[attackRhombus[i][j].stars[k].color], shaders["VertexColor"], modelMatrix);
+                    }
                 }
             }
             float x = i * step + 150;
@@ -437,7 +475,6 @@ void Tema1::Update(float deltaTimeSeconds)
         step += 350;
     }
 
-
     // adding a new enemy in queue
     if (enemyTimer >= enemyGenerationInterval)
     {
@@ -446,12 +483,12 @@ void Tema1::Update(float deltaTimeSeconds)
         // random Y from available data
         float enemyStartY = std::rand() % possibleEnemyY.size();
         EnemyData newEnemy = EnemyData(colorsEnemies[enemyColorIndex],
-                                       3, // life
-                                       enemyStartX, // x
+                                       3,                           // life
+                                       enemyStartX,                 // x
                                        possibleEnemyY[enemyStartY], // y
-                                       enemyStartY, // line index
-                                       0, 1, 1); // hasReachedBarrier and scale args
-        enemies.push_back(newEnemy);             // adding enemy
+                                       enemyStartY,                 // line index
+                                       0, 1, 1);                    // hasReachedBarrier and scale args
+        enemies.push_back(newEnemy);                                // adding enemy
         enemyTimer = 0.0f;
     }
 
@@ -462,7 +499,8 @@ void Tema1::Update(float deltaTimeSeconds)
         {
             // cehck collision with a rhombus
             checkCollision(enemy->line, enemy->x, attackRhombus, rhombusLength);
-            if (enemy->x <= 10) { // reached barrier
+            if (enemy->x <= 10)
+            { // reached barrier
                 enemy->hasReachedBarrier = 1;
             }
             modelMatrix = glm::mat3(1);
@@ -474,7 +512,9 @@ void Tema1::Update(float deltaTimeSeconds)
                 modelMatrix *= transform2D::Rotate(0.3926991f); // rotating the hexagon
                 modelMatrix *= transform2D::Translate(-hexagon_center_x, -hexagon_center_y);
                 RenderMesh2D(meshes[enemy->color], shaders["VertexColor"], modelMatrix);
-            } else {
+            }
+            else
+            {
                 enemy->scaleX -= deltaTimeSeconds;
                 enemy->scaleY -= deltaTimeSeconds;
                 modelMatrix *= transform2D::Translate(enemy->x, enemy->y + 20);
@@ -484,10 +524,12 @@ void Tema1::Update(float deltaTimeSeconds)
                 modelMatrix *= transform2D::Translate(-hexagon_center_x, -hexagon_center_y);
                 RenderMesh2D(meshes[enemy->color], shaders["VertexColor"], modelMatrix);
 
-                if (enemy->scaleX <= 0.006) {
+                if (enemy->scaleX <= 0.006)
+                {
                     life_number -= 1;
                     enemies.pop_front();
-                    if (life_number == 0) {
+                    if (life_number == 0)
+                    {
                         exit(1); // lost game
                     }
                 }
@@ -503,39 +545,7 @@ void Tema1::Update(float deltaTimeSeconds)
         RenderMesh2D(meshes[selectedRhombus.color], shaders["VertexColor"], modelMatrix);
     }
 
-
     // Create a random number generator (as previously shown)
-
-    if (numberOfGeneratedStars < MAX_STARS) // maximum 5 stars on screen
-    {
-        if (starTimer >= starGenerationInterval)
-        {
-            // calculating new coordinates only for last star in the array
-            float x = rand() % screenWidth;
-            float y = rand() % screenHeight;
-
-            bonusStars[numberOfGeneratedStars].x = x;
-            bonusStars[numberOfGeneratedStars].y = y;
-            bonusStars[numberOfGeneratedStars].hasBeenPicked = 0;
-
-            numberOfGeneratedStars++;
-            starTimer = 0.0f;
-        }
-    }
-
-    for (i = 0; i < numberOfGeneratedStars; i++)
-    {
-        if (!bonusStars[i].hasBeenPicked) // checking to render it
-        {
-            glm::mat3 modelMatrix(1); // Initialize the model matrix
-            modelMatrix *= transform2D::Translate(
-                bonusStars[i].x,
-                bonusStars[i].y);
-
-            // Render the star with the updated model matrix
-            RenderMesh2D(meshes["bonusStar"], shaders["VertexColor"], modelMatrix);
-        }
-    }
 }
 
 void Tema1::OnMouseMove(int mouseX, int mouseY, int deltaX, int deltaY)
