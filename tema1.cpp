@@ -550,7 +550,7 @@ void Tema1::Update(float deltaTimeSeconds)
                     }
                 }
             }
-            else
+            else // enemy was destroyed
             {
                 enemy->scaleX -= deltaTimeSeconds;
                 enemy->scaleY -= deltaTimeSeconds;
