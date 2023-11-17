@@ -36,6 +36,7 @@ namespace m1
         float heart_center_x, heart_center_y;
         float star_center_x, star_center_y;
         float hexagon_center_x, hexagon_center_y;
+        float shootingStar_center_x, shootingStar_center_y;
         glm::mat3 modelMatrix;
         int life_number;
         int moneyStars;
@@ -62,6 +63,7 @@ namespace m1
         float randomYStar;
 
         float bonusStarDimension = 80;
+        float shootingStarDimension;
 
         // array of rendered bonus stars to be picked
         BonusStar bonusStars[MAX_STARS];
@@ -85,6 +87,8 @@ namespace m1
             "yellowHexagon",
             "purpleHexagon",
         };
+
+        std::vector<ShootingStarData> stars;
 
 
     };

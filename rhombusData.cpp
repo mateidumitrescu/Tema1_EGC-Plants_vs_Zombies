@@ -21,8 +21,8 @@ RhombusData::RhombusData(std::string _colorToCheck,
                          float _scaleX, float _scaleY,
                          int _line,
                          std::string _shootingStarType,
-                         float _shootingGenerationInterval, float _shootingTimer,
-                         std::vector<ShootingStarData> _stars)
+                         std::string _colorEnemy,
+                         float _shootingGenerationInterval, float _shootingTimer)
 {
     colorToCheck = _colorToCheck;
     color = _color;
@@ -35,9 +35,9 @@ RhombusData::RhombusData(std::string _colorToCheck,
     scaleY = _scaleY;
     line = _line;
     shootingStarType = _shootingStarType;
+    colorEnemy = _colorEnemy;
     shootingGenerationInterval = _shootingGenerationInterval;
     shootingTimer = _shootingTimer;
-    stars = _stars;
 }
 
 void RhombusData::calculateCost()
@@ -60,7 +60,7 @@ void RhombusData::calculateCost()
     else if (color == "purpleRhombus")
     {
         colorToCheck = "purple";
-        cost = 4;
+        cost = 3;
     }
 }
 
@@ -74,23 +74,28 @@ void RhombusData::setStar()
 {
     if (color == "orangeRhombus")
     {
+        colorEnemy = "orangeHexagon";
         shootingStarType = "shootingOrangeStar";
     }
     else if (color == "blueRhombus")
     {
+        colorEnemy = "blueHexagon";
         shootingStarType = "shootingBlueStar";
     }
     else if (color == "yellowRhombus")
     {
+        colorEnemy = "yellowHexagon";
         shootingStarType = "shootingYellowStar";
     }
     else if (color == "purpleRhombus")
     {
+        colorEnemy = "purpleHexagon";
         shootingStarType = "shootingPurpleStar";
     }
 }
 
-void RhombusData::shoot(std::deque<EnemyData> enemies, float deltaTimeSeconds, float rhombusLength)
+void RhombusData::generateShoot(std::deque<EnemyData> enemies, float deltaTimeSeconds,
+                                float rhombusLength, std::vector<ShootingStarData> &stars)
 {
 
     glm::mat3 modelMatrix;
@@ -103,14 +108,15 @@ void RhombusData::shoot(std::deque<EnemyData> enemies, float deltaTimeSeconds, f
             if (this->shootingTimer >= this->shootingGenerationInterval)
             {
                 // adding new star in stars vector
-                this->stars.push_back(ShootingStarData(this->shootingStarType,      // ex: "yellowShootingStar"
-                                                       this->x + rhombusLength,     // x coordinate
-                                                       this->y + rhombusLength / 2 - 10, // y coordinate
-                                                       this->line,                  // same line as rhombus
-                                                       0,                           // mustBeDestroyed
-                                                       1,                           // scaleX
-                                                       1,                           // scaleY
-                                                       1));                         // shouldStartShoot (it means there is)
+                stars.push_back(ShootingStarData(this->shootingStarType,
+                                                 this->colorEnemy,                 // ex: "yellowShootingStar"
+                                                 this->x + rhombusLength - 10,     // x coordinate
+                                                 this->y + rhombusLength / 2 - 20, // y coordinate
+                                                 this->line,                       // same line as rhombus
+                                                 0,                                // mustBeDestroyed
+                                                 1,                                // scaleX
+                                                 1,                                // scaleY
+                                                 0));                              // angularStep for rotating
                 this->shootingTimer = 0.0f;
             }
         }

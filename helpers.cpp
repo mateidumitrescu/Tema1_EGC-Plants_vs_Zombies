@@ -1,6 +1,8 @@
 #include "helpers.h"
 #include "lab_m1/tema1/tema1.h"
 #include "lab_m1/tema1/bonusStar.h"
+#include "shootingStarData.h"
+#include "enemyData.h"
 
 void checkIfPickedStar(int mouseX, int mouseY,
                        BonusStar *bonusStars, int &numberOfGeneratedStars,
@@ -15,6 +17,7 @@ void checkIfPickedStar(int mouseX, int mouseY,
             mouseY >= star.y && mouseY <= star.y + bonusStarDimension &&
             moneyStars < 12)
         {
+            moneyStars++;
             // placing last picked star at the end so new coordinates can be
             // calculated in Update method
             for (j = i; j < numberOfGeneratedStars - 1; j++)
@@ -25,7 +28,6 @@ void checkIfPickedStar(int mouseX, int mouseY,
             bonusStars[numberOfGeneratedStars - 1] = star;
 
             numberOfGeneratedStars--;
-            moneyStars++;
 
             break;
         }
@@ -49,7 +51,7 @@ std::string selectedColor(int mouseX, int mouseY, int squareSide, int moneyStars
         {
             return "yellowRhombus";
         }
-        else if (mouseX >= 1150 && mouseX <= 1150 + squareSide && moneyStars >= 4)
+        else if (mouseX >= 1150 && mouseX <= 1150 + squareSide && moneyStars >= 3)
         {
             return "purpleRhombus";
         }
@@ -69,7 +71,7 @@ void placeRhombus(int mouseX, int mouseY, int squareSide,
         !attackRhombus[0][0].isPlaced)
     {
         selectedRhombus.shootingTimer = 3.5f;
-        selectedRhombus.shootingGenerationInterval = 4.0f;
+        selectedRhombus.shootingGenerationInterval = 2.5f;
         selectedRhombus.line = 0;
         selectedRhombus.scaleX = 1.0f;
         selectedRhombus.scaleY = 1.0f;
@@ -85,7 +87,7 @@ void placeRhombus(int mouseX, int mouseY, int squareSide,
              !attackRhombus[0][1].isPlaced)
     {
         selectedRhombus.shootingTimer = 3.5f;
-        selectedRhombus.shootingGenerationInterval = 4.0f;
+        selectedRhombus.shootingGenerationInterval = 2.5f;
         selectedRhombus.line = 0;
         selectedRhombus.scaleX = 1.0f;
         selectedRhombus.scaleY = 1.0f;
@@ -101,7 +103,7 @@ void placeRhombus(int mouseX, int mouseY, int squareSide,
              !attackRhombus[0][2].isPlaced)
     {
         selectedRhombus.shootingTimer = 3.5f;
-        selectedRhombus.shootingGenerationInterval = 4.0f;
+        selectedRhombus.shootingGenerationInterval = 2.5f;
         selectedRhombus.line = 0;
         selectedRhombus.scaleX = 1.0f;
         selectedRhombus.scaleY = 1.0f;
@@ -117,7 +119,7 @@ void placeRhombus(int mouseX, int mouseY, int squareSide,
              !attackRhombus[1][0].isPlaced)
     {
         selectedRhombus.shootingTimer = 3.5f;
-        selectedRhombus.shootingGenerationInterval = 4.0f;
+        selectedRhombus.shootingGenerationInterval = 2.5f;
         selectedRhombus.line = 1;
         selectedRhombus.scaleX = 1.0f;
         selectedRhombus.scaleY = 1.0f;
@@ -133,7 +135,7 @@ void placeRhombus(int mouseX, int mouseY, int squareSide,
              !attackRhombus[1][1].isPlaced)
     {
         selectedRhombus.shootingTimer = 3.5f;
-        selectedRhombus.shootingGenerationInterval = 4.0f;
+        selectedRhombus.shootingGenerationInterval = 2.5f;
         selectedRhombus.line = 1;
         selectedRhombus.scaleX = 1.0f;
         selectedRhombus.scaleY = 1.0f;
@@ -149,7 +151,7 @@ void placeRhombus(int mouseX, int mouseY, int squareSide,
              !attackRhombus[1][2].isPlaced)
     {
         selectedRhombus.shootingTimer = 3.5f;
-        selectedRhombus.shootingGenerationInterval = 4.0f;
+        selectedRhombus.shootingGenerationInterval = 2.5f;
         selectedRhombus.line = 1;
         selectedRhombus.scaleX = 1.0f;
         selectedRhombus.scaleY = 1.0f;
@@ -165,7 +167,7 @@ void placeRhombus(int mouseX, int mouseY, int squareSide,
              !attackRhombus[2][0].isPlaced)
     {
         selectedRhombus.shootingTimer = 3.5f;
-        selectedRhombus.shootingGenerationInterval = 4.0f;
+        selectedRhombus.shootingGenerationInterval = 2.5f;
         selectedRhombus.line = 2;
         selectedRhombus.scaleX = 1.0f;
         selectedRhombus.scaleY = 1.0f;
@@ -181,7 +183,7 @@ void placeRhombus(int mouseX, int mouseY, int squareSide,
              !attackRhombus[2][1].isPlaced)
     {
         selectedRhombus.shootingTimer = 3.5f;
-        selectedRhombus.shootingGenerationInterval = 4.0f;
+        selectedRhombus.shootingGenerationInterval = 2.5f;
         selectedRhombus.line = 2;
         selectedRhombus.scaleX = 1.0f;
         selectedRhombus.scaleY = 1.0f;
@@ -197,7 +199,7 @@ void placeRhombus(int mouseX, int mouseY, int squareSide,
              !attackRhombus[2][2].isPlaced)
     {
         selectedRhombus.shootingTimer = 3.5f;
-        selectedRhombus.shootingGenerationInterval = 4.0f;
+        selectedRhombus.shootingGenerationInterval = 2.5f;
         selectedRhombus.line = 2;
         selectedRhombus.scaleX = 1.0f;
         selectedRhombus.scaleY = 1.0f;
@@ -278,19 +280,37 @@ void checkIfDestroyRhombus(int mouseX, int mouseY, int squareSide,
     }
 }
 
-void checkCollision(int enemyLine, float enemyX, RhombusData attackRhombus[3][3], float rhombusLength)
+void checkCollision(std::deque<EnemyData>::iterator enemy, RhombusData attackRhombus[3][3],
+                    float rhombusLength, std::vector<ShootingStarData> &stars,
+                    float shootingStarDimension)
 {
+    // checking collision with rhombuses
     for (int i = 0; i < 3; i++)
     {
         for (int j = 0; j < 3; j++)
         {
             // checking collision here
             if (attackRhombus[i][j].isPlaced &&
-                enemyLine == i &&
-                enemyX <= attackRhombus[i][j].x + rhombusLength &&
-                enemyX >= attackRhombus[i][j].x)
+                enemy->line == i &&
+                enemy->x <= attackRhombus[i][j].x + rhombusLength &&
+                enemy->x >= attackRhombus[i][j].x)
             {
                 attackRhombus[i][j].mustBeDestroyed = 1;
+            }
+        }
+    }
+
+    for (int i = 0; i < stars.size(); i++)
+    {
+        if (stars[i].line == enemy->line &&
+            enemy->x <= stars[i].x + shootingStarDimension &&
+            enemy->x > stars[i].x &&
+            enemy->color == stars[i].colorEnemy)
+        {
+            stars.erase(stars.begin() + i);
+            enemy->life--;
+            if (enemy->life == 0) {
+                enemy->mustBeDestroyed = 1;
             }
         }
     }

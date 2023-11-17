@@ -7,19 +7,21 @@ class ShootingStarData
 
 public:
     ShootingStarData() = default;
-    ShootingStarData(std::string _color, float _x, float _y,
-              int _line,
-              int _mustBeDestroyed,
-              float _scaleX, float _scaleY,
-              int _shouldStartShoot);
+    ShootingStarData(std::string _color, std::string _colorEnemy,
+                     float _x, float _y,
+                     int _line,
+                     int _mustBeDestroyed,
+                     float _scaleX, float _scaleY,
+                     float _angularStep);
     std::string color;
+    std::string colorEnemy;
     float x;
     float y;
     int line;
     int mustBeDestroyed;
     float scaleX;
     float scaleY;
-    int shouldStartShoot;
+    float angularStep;
 };
 
 #endif

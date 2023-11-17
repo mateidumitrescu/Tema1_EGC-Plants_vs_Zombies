@@ -2,6 +2,7 @@
 #include "bonusStar.h"
 #include "rhombusData.h"
 #include "enemyData.h"
+#include "shootingStarData.h"
 
 #include <string>
 
@@ -24,4 +25,6 @@ void checkIfDestroyRhombus(int mouseX, int mouseY, int squareSide,
                            RhombusData attackRhombus[3][3]);
 
 // check enemy-rhombus collision
-void checkCollision(int enemyLine, float enemyX, RhombusData attackRhombus[3][3], float rhombusLength);
+void checkCollision(std::deque<EnemyData>::iterator enemy, RhombusData attackRhombus[3][3],
+                    float rhombusLength, std::vector<ShootingStarData> &stars,
+                    float shootingStarDimension);

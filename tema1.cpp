@@ -72,7 +72,7 @@ void Tema1::Init()
     // dimension of user space star, "money star", bonus star
     float userStarDimension = 45;
     float userMoneyStarDimension = 55;
-    float shootingStarDimension = 70;
+    shootingStarDimension = 70;
 
     // dimension of enemy (hexagon)
     float hexagonDimension = 170;
@@ -100,6 +100,9 @@ void Tema1::Init()
     // computing hexagon center coordinates
     hexagon_center_x = corner.x + hexagonDimension / 2;
     hexagon_center_y = corner.y + hexagonDimension / 2;
+
+    shootingStar_center_x = corner.x + shootingStarDimension / 2;
+    shootingStar_center_y = corner.y + shootingStarDimension / 2;
 
     // setting number of lifes
     life_number = 3;
@@ -390,17 +393,10 @@ void Tema1::Update(float deltaTimeSeconds)
                 else
                 {
                     // shooting if there is an enemy on line with same color
-                    attackRhombus[i][j].shoot(enemies, deltaTimeSeconds, rhombusLength);
+                    attackRhombus[i][j].generateShoot(enemies, deltaTimeSeconds, rhombusLength, stars);
                     RenderMesh2D(
                         meshes[attackRhombus[i][j].color],
                         shaders["VertexColor"], modelMatrix);
-                    for (int k = 0; k < attackRhombus[i][j].stars.size(); k++)
-                    { // TREBUIE SA FAC UN VECTOR DE STELE IN MAIN!!!
-                        attackRhombus[i][j].stars[k].x += deltaTimeSeconds * 200;
-                        modelMatrix = glm::mat3(1);
-                        modelMatrix *= transform2D::Translate(attackRhombus[i][j].stars[k].x, attackRhombus[i][j].stars[k].y);
-                        RenderMesh2D(meshes[attackRhombus[i][j].stars[k].color], shaders["VertexColor"], modelMatrix);
-                    }
                 }
             }
             float x = i * step + 150;
@@ -409,6 +405,19 @@ void Tema1::Update(float deltaTimeSeconds)
             modelMatrix *= transform2D::Translate(x, y); // first x = 150, y = 50
             RenderMesh2D(meshes["squareGreen"], shaders["VertexColor"], modelMatrix);
         }
+    }
+
+    // redndering shooting stars
+    for (int k = 0; k < stars.size(); k++)
+    {
+        stars[k].x += deltaTimeSeconds * 300;
+        modelMatrix = glm::mat3(1);
+        modelMatrix *= transform2D::Translate(stars[k].x, stars[k].y);
+        stars[k].angularStep -= deltaTimeSeconds * 5; // rotating star
+        modelMatrix *= transform2D::Translate(shootingStar_center_x, shootingStar_center_y);
+        modelMatrix *= transform2D::Rotate(stars[k].angularStep);
+        modelMatrix *= transform2D::Translate(-shootingStar_center_x, -shootingStar_center_y);
+        RenderMesh2D(meshes[stars[k].color], shaders["VertexColor"], modelMatrix);
     }
 
     /* all squares are rendered,
@@ -459,6 +468,10 @@ void Tema1::Update(float deltaTimeSeconds)
         {
             cost = 2;
         }
+        else if (level == 4)
+        {
+            cost = 3;
+        }
         else
         {
             cost = level;
@@ -487,7 +500,10 @@ void Tema1::Update(float deltaTimeSeconds)
                                        enemyStartX,                 // x
                                        possibleEnemyY[enemyStartY], // y
                                        enemyStartY,                 // line index
-                                       0, 1, 1);                    // hasReachedBarrier and scale args
+                                       0,                           // hasReachedBarrier
+                                       0,                           // mustBeDestroyed
+                                       1,                           // scaleX
+                                       1);                          // scaleY
         enemies.push_back(newEnemy);                                // adding enemy
         enemyTimer = 0.0f;
     }
@@ -498,20 +514,41 @@ void Tema1::Update(float deltaTimeSeconds)
         for (auto enemy = enemies.begin(); enemy != enemies.end(); enemy++)
         {
             // cehck collision with a rhombus
-            checkCollision(enemy->line, enemy->x, attackRhombus, rhombusLength);
+            checkCollision(enemy, attackRhombus, rhombusLength, stars, shootingStarDimension);
             if (enemy->x <= 10)
             { // reached barrier
                 enemy->hasReachedBarrier = 1;
             }
             modelMatrix = glm::mat3(1);
-            if (!enemy->hasReachedBarrier) // checking if enemy got to barrier
+            if (!enemy->hasReachedBarrier && !enemy->mustBeDestroyed) // checking if enemy got to barrier
             {
-                enemy->x -= deltaTimeSeconds * 200;
+                enemy->x -= deltaTimeSeconds * 250;
                 modelMatrix *= transform2D::Translate(enemy->x, enemy->y + 20);
                 modelMatrix *= transform2D::Translate(hexagon_center_x, hexagon_center_y);
                 modelMatrix *= transform2D::Rotate(0.3926991f); // rotating the hexagon
                 modelMatrix *= transform2D::Translate(-hexagon_center_x, -hexagon_center_y);
                 RenderMesh2D(meshes[enemy->color], shaders["VertexColor"], modelMatrix);
+            }
+            else if (enemy->hasReachedBarrier)
+            {
+                enemy->scaleX -= deltaTimeSeconds;
+                enemy->scaleY -= deltaTimeSeconds;
+                modelMatrix *= transform2D::Translate(enemy->x, enemy->y + 20);
+                modelMatrix *= transform2D::Translate(hexagon_center_x, hexagon_center_y);
+                modelMatrix *= transform2D::Rotate(0.3926991f); // rotating the hexagon
+                modelMatrix *= transform2D::Scale(enemy->scaleX, enemy->scaleY);
+                modelMatrix *= transform2D::Translate(-hexagon_center_x, -hexagon_center_y);
+                RenderMesh2D(meshes[enemy->color], shaders["VertexColor"], modelMatrix);
+
+                if (enemy->scaleX <= 0.006)
+                {
+                    life_number--;
+                    enemies.pop_front();
+                    if (life_number == 0)
+                    {
+                        exit(1); // lost game
+                    }
+                }
             }
             else
             {
@@ -526,12 +563,7 @@ void Tema1::Update(float deltaTimeSeconds)
 
                 if (enemy->scaleX <= 0.006)
                 {
-                    life_number -= 1;
                     enemies.pop_front();
-                    if (life_number == 0)
-                    {
-                        exit(1); // lost game
-                    }
                 }
             }
         }
