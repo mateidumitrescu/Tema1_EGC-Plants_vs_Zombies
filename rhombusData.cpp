@@ -94,15 +94,15 @@ void RhombusData::setStar()
     }
 }
 
-void RhombusData::generateShoot(std::deque<EnemyData> enemies, float deltaTimeSeconds,
+void RhombusData::generateShoot(std::vector<EnemyData> enemies, float deltaTimeSeconds,
                                 float rhombusLength, std::vector<ShootingStarData> &stars)
 {
 
     glm::mat3 modelMatrix;
-    for (auto enemy = enemies.begin(); enemy != enemies.end(); enemy++)
+    for (int i = 0; i < enemies.size(); i++)
     {
         // check if there is an enemy on the same line with same color
-        if (enemy->line == this->line && enemy->color.find(this->colorToCheck) == 0)
+        if (enemies[i].line == this->line && enemies[i].color.find(this->colorToCheck) == 0)
         {
             this->shootingTimer += deltaTimeSeconds; // incrementing timer for shooting
             if (this->shootingTimer >= this->shootingGenerationInterval)

@@ -280,7 +280,7 @@ void checkIfDestroyRhombus(int mouseX, int mouseY, int squareSide,
     }
 }
 
-void checkCollision(std::deque<EnemyData>::iterator enemy, RhombusData attackRhombus[3][3],
+void checkCollision(EnemyData &enemy, RhombusData attackRhombus[3][3],
                     float rhombusLength, std::vector<ShootingStarData> &stars,
                     float shootingStarDimension)
 {
@@ -291,9 +291,9 @@ void checkCollision(std::deque<EnemyData>::iterator enemy, RhombusData attackRho
         {
             // checking collision here
             if (attackRhombus[i][j].isPlaced &&
-                enemy->line == i &&
-                enemy->x <= attackRhombus[i][j].x + rhombusLength &&
-                enemy->x >= attackRhombus[i][j].x)
+                enemy.line == i &&
+                enemy.x <= attackRhombus[i][j].x + rhombusLength &&
+                enemy.x >= attackRhombus[i][j].x)
             {
                 attackRhombus[i][j].mustBeDestroyed = 1;
             }
@@ -302,15 +302,15 @@ void checkCollision(std::deque<EnemyData>::iterator enemy, RhombusData attackRho
 
     for (int i = 0; i < stars.size(); i++)
     {
-        if (stars[i].line == enemy->line &&
-            enemy->x <= stars[i].x + shootingStarDimension &&
-            enemy->x > stars[i].x &&
-            enemy->color == stars[i].colorEnemy)
+        if (stars[i].line == enemy.line &&
+            enemy.x <= stars[i].x + shootingStarDimension &&
+            enemy.x > stars[i].x &&
+            enemy.color == stars[i].colorEnemy)
         {
             stars.erase(stars.begin() + i);
-            enemy->life--;
-            if (enemy->life == 0) {
-                enemy->mustBeDestroyed = 1;
+            enemy.life--;
+            if (enemy.life == 0) {
+                enemy.mustBeDestroyed = 1;
             }
         }
     }

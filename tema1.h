@@ -77,7 +77,7 @@ namespace m1
             "purpleRhombus",
         };
 
-        std::deque<EnemyData> enemies;
+        std::vector<EnemyData> enemies;
         float enemyStartX;
 
         std::vector<float> possibleEnemyY = {50, 320, 590};

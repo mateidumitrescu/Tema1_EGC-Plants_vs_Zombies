@@ -47,7 +47,7 @@ public:
     void setStar();
 
     // shooting if there is an enemy on line with same color
-    void generateShoot(std::deque<EnemyData> enemies, float deltaTimeSeconds,
+    void generateShoot(std::vector<EnemyData> enemies, float deltaTimeSeconds,
                        float rhombusLength, std::vector<ShootingStarData> &stars);
 };
 

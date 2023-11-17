@@ -25,6 +25,6 @@ void checkIfDestroyRhombus(int mouseX, int mouseY, int squareSide,
                            RhombusData attackRhombus[3][3]);
 
 // check enemy-rhombus collision
-void checkCollision(std::deque<EnemyData>::iterator enemy, RhombusData attackRhombus[3][3],
+void checkCollision(EnemyData &enemy, RhombusData attackRhombus[3][3],
                     float rhombusLength, std::vector<ShootingStarData> &stars,
                     float shootingStarDimension);

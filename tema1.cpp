@@ -511,39 +511,39 @@ void Tema1::Update(float deltaTimeSeconds)
     if (enemies.size() > 0)
     {
         // rendering enemies
-        for (auto enemy = enemies.begin(); enemy != enemies.end(); enemy++)
+        for (i = 0; i < enemies.size(); i++)
         {
             // cehck collision with a rhombus
-            checkCollision(enemy, attackRhombus, rhombusLength, stars, shootingStarDimension);
-            if (enemy->x <= 10)
+            checkCollision(enemies[i], attackRhombus, rhombusLength, stars, shootingStarDimension);
+            if (enemies[i].x <= 10)
             { // reached barrier
-                enemy->hasReachedBarrier = 1;
+                enemies[i].hasReachedBarrier = 1;
             }
             modelMatrix = glm::mat3(1);
-            if (!enemy->hasReachedBarrier && !enemy->mustBeDestroyed) // checking if enemy got to barrier
+            if (!enemies[i].hasReachedBarrier && !enemies[i].mustBeDestroyed) // checking if enemy got to barrier
             {
-                enemy->x -= deltaTimeSeconds * 250;
-                modelMatrix *= transform2D::Translate(enemy->x, enemy->y + 20);
+                enemies[i].x -= deltaTimeSeconds * 250;
+                modelMatrix *= transform2D::Translate(enemies[i].x, enemies[i].y + 20);
                 modelMatrix *= transform2D::Translate(hexagon_center_x, hexagon_center_y);
                 modelMatrix *= transform2D::Rotate(0.3926991f); // rotating the hexagon
                 modelMatrix *= transform2D::Translate(-hexagon_center_x, -hexagon_center_y);
-                RenderMesh2D(meshes[enemy->color], shaders["VertexColor"], modelMatrix);
+                RenderMesh2D(meshes[enemies[i].color], shaders["VertexColor"], modelMatrix);
             }
-            else if (enemy->hasReachedBarrier)
+            else if (enemies[i].hasReachedBarrier)
             {
-                enemy->scaleX -= deltaTimeSeconds;
-                enemy->scaleY -= deltaTimeSeconds;
-                modelMatrix *= transform2D::Translate(enemy->x, enemy->y + 20);
+                enemies[i].scaleX -= deltaTimeSeconds;
+                enemies[i].scaleY -= deltaTimeSeconds;
+                modelMatrix *= transform2D::Translate(enemies[i].x, enemies[i].y + 20);
                 modelMatrix *= transform2D::Translate(hexagon_center_x, hexagon_center_y);
                 modelMatrix *= transform2D::Rotate(0.3926991f); // rotating the hexagon
-                modelMatrix *= transform2D::Scale(enemy->scaleX, enemy->scaleY);
+                modelMatrix *= transform2D::Scale(enemies[i].scaleX, enemies[i].scaleY);
                 modelMatrix *= transform2D::Translate(-hexagon_center_x, -hexagon_center_y);
-                RenderMesh2D(meshes[enemy->color], shaders["VertexColor"], modelMatrix);
+                RenderMesh2D(meshes[enemies[i].color], shaders["VertexColor"], modelMatrix);
 
-                if (enemy->scaleX <= 0.006)
+                if (enemies[i].scaleX <= 0.006)
                 {
                     life_number--;
-                    enemies.pop_front();
+                    enemies.erase(enemies.begin() + i);
                     if (life_number == 0)
                     {
                         exit(1); // lost game
@@ -552,18 +552,18 @@ void Tema1::Update(float deltaTimeSeconds)
             }
             else // enemy was destroyed
             {
-                enemy->scaleX -= deltaTimeSeconds;
-                enemy->scaleY -= deltaTimeSeconds;
-                modelMatrix *= transform2D::Translate(enemy->x, enemy->y + 20);
+                enemies[i].scaleX -= deltaTimeSeconds;
+                enemies[i].scaleY -= deltaTimeSeconds;
+                modelMatrix *= transform2D::Translate(enemies[i].x, enemies[i].y + 20);
                 modelMatrix *= transform2D::Translate(hexagon_center_x, hexagon_center_y);
                 modelMatrix *= transform2D::Rotate(0.3926991f); // rotating the hexagon
-                modelMatrix *= transform2D::Scale(enemy->scaleX, enemy->scaleY);
+                modelMatrix *= transform2D::Scale(enemies[i].scaleX, enemies[i].scaleY);
                 modelMatrix *= transform2D::Translate(-hexagon_center_x, -hexagon_center_y);
-                RenderMesh2D(meshes[enemy->color], shaders["VertexColor"], modelMatrix);
+                RenderMesh2D(meshes[enemies[i].color], shaders["VertexColor"], modelMatrix);
 
-                if (enemy->scaleX <= 0.006)
+                if (enemies[i].scaleX <= 0.006)
                 {
-                    enemies.pop_front();
+                    enemies.erase(enemies.begin() + i);
                 }
             }
         }
